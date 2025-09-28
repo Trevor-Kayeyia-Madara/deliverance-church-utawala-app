@@ -1,6 +1,12 @@
 import { departments } from "../assets/data";
 import "../styles/Departments.css";
 const Departments = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section id="departments" className="departments-section">
       <div className="container">
@@ -47,8 +53,18 @@ const Departments = () => {
               of service and make a difference in our community.
             </p>
             <div className="cta-actions">
-              <button className="btn btn-primary">Get Involved</button>
-              <button className="btn btn-secondary">Contact Us</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => scrollToSection("contact")}
+              >
+                Get Involved
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => scrollToSection("contact")}
+              >
+                Contact Us
+              </button>
             </div>
           </div>
         </div>

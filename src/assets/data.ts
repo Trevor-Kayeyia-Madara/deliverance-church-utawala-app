@@ -120,42 +120,41 @@ export const slides = [
       description: 'Leading the congregation in heartfelt worship and creating an atmosphere where people can encounter God through music and song.',
       leader: 'Brother Peter Ochieng',
       activities: ['Sunday Worship', 'Choir Practice', 'Special Events', 'Music Training'],
-      meetingTime: 'Thursdays 6:30 PM'
+      meetingTime: 'Thursdays'
     },
     {
       title: 'Media Ministry',
       description: 'Capturing and sharing God\'s work through photography, videography, and live streaming to reach both local and online congregations.',
       leader: 'Sister Jane Wanjiku',
       activities: ['Live Streaming', 'Photography', 'Video Production', 'Social Media'],
-      meetingTime: 'Wednesdays 6:00 PM'
+      meetingTime: 'Sundays'
     },
     {
       title: 'Ushering Ministry',
       description: 'Welcoming guests with love and ensuring everyone feels at home while maintaining order during services.',
       leader: 'Brother James Kiprotich',
       activities: ['Guest Welcome', 'Seating Coordination', 'Offering Collection', 'Service Support'],
-      meetingTime: 'Sundays 8:30 AM'
+      meetingTime: 'Sundays'
     },
     {
       title: 'Protocol Ministry',
       description: 'Ensuring smooth flow of services and events while maintaining dignity and order in all church activities.',
       leader: 'Sister Grace Muthoni',
       activities: ['Service Coordination', 'Event Planning', 'Guest Relations', 'Ceremony Management'],
-      meetingTime: 'Fridays 7:00 PM'
+      meetingTime: 'Sundays'
     },
     {
       title: 'Security Ministry',
       description: 'Providing a safe and secure environment for all church members and visitors during services and events.',
       leader: 'Brother Samuel Omondi',
       activities: ['Facility Security', 'Parking Management', 'Emergency Response', 'Safety Protocols'],
-      meetingTime: 'Sundays 9:00 AM'
+      meetingTime: 'Sundays'
     },
     {
       title: 'Youth Ministry',
       description: 'Empowering young people to grow in their faith while providing mentorship, fellowship, and leadership opportunities.',
-      leader: 'Sister Mary Njeri',
       activities: ['Youth Worship', 'Mentorship Programs', 'Life Skills Training', 'Community Outreach'],
-      meetingTime: 'Wednesdays 6:30 PM'
+      meetingTime: 'Wednesdays'
     },
     {
       title: 'Sunday School Ministry',
@@ -168,14 +167,14 @@ export const slides = [
 
   export const facilities = [
     {
-      title: 'Early Learning Program',
-      ageGroup: 'Ages 2-5',
+      title: 'Play Group',
+      ageGroup: 'From Age 2',
       description: 'Nurturing young minds with Christian values and foundational learning skills.',
       features: ['Play-based Learning', 'Christian Values', 'Qualified Teachers', 'Safe Environment']
     },
     {
-      title: 'Primary Education',
-      ageGroup: 'Ages 6-12',
+      title: 'PP1',
+      ageGroup: 'Intake Ongoing',
       description: 'Comprehensive primary education combining academic excellence with spiritual growth.',
       features: ['CBC Curriculum', 'Small Class Sizes', 'Extracurricular Activities', 'Moral Education']
     },

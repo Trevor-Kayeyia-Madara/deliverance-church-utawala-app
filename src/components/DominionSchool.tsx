@@ -1,6 +1,12 @@
 import { facilities } from "../assets/data";
 import "../styles/DominionSchool.css";
 const DominionSchool = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section id="dominion-center" className="dominion-center-section">
       <div className="container">
@@ -29,7 +35,12 @@ const DominionSchool = () => {
                   ))}
                 </ul>
               </div>
-              <button className="btn btn-secondary">Learn More</button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => scrollToSection("contact")}
+              >
+                Learn More
+              </button>
             </div>
           ))}
         </div>
@@ -42,8 +53,18 @@ const DominionSchool = () => {
               built on Christian values and academic excellence.
             </p>
             <div className="cta-actions">
-              <button className="btn btn-primary">Apply Now</button>
-              <button className="btn btn-secondary">Schedule Visit</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => scrollToSection("contact")}
+              >
+                Apply Now
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => scrollToSection("contact")}
+              >
+                Schedule Visit
+              </button>
             </div>
           </div>
         </div>
