@@ -1,156 +1,114 @@
-import "../styles/Footer.css";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import { FaTiktok } from "react-icons/fa";
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+import { Mail, MapPin, Phone } from 'lucide-react';
+import { SERVICE_TIMES } from '../content/serviceTimes';
+import type { Page } from '../types/page';
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
+export default function Footer({ setPage }: { setPage: (p: Page) => void }) {
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-content">
-          <div className="footer-section">
-            <div className="footer-logo">
-              <span className="logo-text">Deliverance Church</span>
-              <span className="logo-subtitle">Utawala</span>
+    <footer className="bg-background-dark text-white py-16 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <img
+                src="/logo.png"
+                alt="Deliverance Church Logo"
+                className="size-10 object-contain"
+              />
+              <div>
+                <p className="text-lg font-extrabold tracking-tight uppercase">
+                  Deliverance Church
+                </p>
+                <p className="text-sm font-extrabold tracking-wide text-primary">
+                  Utawala
+                </p>
+              </div>
             </div>
-            <p className="footer-description">
-              The Apostolic Church Of Choice transforming & empowering mankind
-              in Africa and beyond.
+            <p className="text-slate-300 text-sm leading-relaxed">
+              The Apostolic Church Of Choice transforming &amp; empowering mankind in
+              Africa and beyond.
             </p>
-            <div className="footer-social">
-              <a href="#" className="social-icon">
-                <span>
-                  <FacebookIcon />
-                </span>
-              </a>
-              <a href="#" className="social-icon">
-                <span>
-                  <InstagramIcon />
-                </span>
-              </a>
-              <a href="#" className="social-icon">
-                <span>
-                  <FaTiktok />
-                </span>
-              </a>
-              <a href="#" className="social-icon">
-                <span>
-                  <YouTubeIcon />
-                </span>
-              </a>
-            </div>
           </div>
 
-          <div className="footer-section">
-            <h3>Quick Links</h3>
-            <ul className="footer-links">
+          <div>
+            <h5 className="font-black mb-6 text-primary">Quick Links</h5>
+            <ul className="flex flex-col gap-3 text-slate-300 text-sm font-medium">
               <li>
-                <a href="#home" onClick={() => scrollToSection("home")}>
+                <button onClick={() => setPage('home')} className="hover:text-white">
                   Home
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#about" onClick={() => scrollToSection("about")}>
+                <button onClick={() => setPage('about')} className="hover:text-white">
                   About Us
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#sermons" onClick={() => scrollToSection("sermons")}>
+                <button onClick={() => setPage('sermons')} className="hover:text-white">
                   Sermons
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="#leadership"
-                  onClick={() => scrollToSection("leadership")}
-                >
-                  Leadership
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#departments"
-                  onClick={() => scrollToSection("departments")}
-                >
-                  Departments
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#dominion-center"
-                  onClick={() => scrollToSection("school")}
+                <button
+                  onClick={() => setPage('dominion-center')}
+                  className="hover:text-white"
                 >
                   Dominion Center
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#giving" onClick={() => scrollToSection("giving")}>
-                  Giving
-                </a>
+                <button
+                  onClick={() => setPage('service-times')}
+                  className="hover:text-white"
+                >
+                  Service Times
+                </button>
               </li>
             </ul>
           </div>
 
-          <div className="footer-section">
-            <h3>Service Times</h3>
-            <div className="service-times">
-              <div className="service-time">
-                <strong>Sunday First Service</strong>
-                <span>6:30 AM & 9:00 AM</span>
-              </div>
-              <div className="service-time">
-                <strong>Sunday Second Service</strong>
-                <span>9:30 AM & 12:00 PM</span>
-              </div>
-              <div className="service-time">
-                <strong>Tuesday Fellowship</strong>
-                <span>6:30 PM</span>
-              </div>
-              <div className="service-time">
-                <strong>Wednesday Anchored Service</strong>
-                <span>6:30 PM - 8:00 PM</span>
-              </div>
-              <div className="service-time">
-                <strong>Friday Ignite Service</strong>
-                <span>6:30 PM - 8:00 PM</span>
-              </div>
-            </div>
+          <div>
+            <h5 className="font-black mb-6 text-primary">Service Times</h5>
+            <ul className="space-y-4">
+              {SERVICE_TIMES.map((s) => (
+                <li key={`${s.day}-${s.name}`}>
+                  <p className="text-sm font-extrabold text-white">{s.name}</p>
+                  <p className="text-sm text-slate-300">{s.time}</p>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="footer-section">
-            <h3>Contact Info</h3>
-            <div className="contact-details">
-              <div className="contact-item">
-                <span className="contact-icon">📍</span>
+          <div>
+            <h5 className="font-black mb-6 text-primary">Contact Info</h5>
+
+            <div className="space-y-6 text-slate-300 text-sm">
+              <div className="flex items-start gap-3">
+                <div className="size-10 rounded-2xl bg-white/5 flex items-center justify-center shrink-0">
+                  <MapPin className="size-5 text-primary" />
+                </div>
                 <div>
-                  <strong>Address</strong>
-                  <p>
-                    300m from ACK St. Monica,
-                    <br />
-                    Utawala, Nairobi
-                  </p>
+                  <p className="text-white font-extrabold">Address</p>
+                  <p>300m from ACK St. Monica,</p>
+                  <p>Utawala, Nairobi</p>
                 </div>
               </div>
-              <div className="contact-item">
-                <span className="contact-icon">📞</span>
+
+              <div className="flex items-start gap-3">
+                <div className="size-10 rounded-2xl bg-white/5 flex items-center justify-center shrink-0">
+                  <Phone className="size-5 text-primary" />
+                </div>
                 <div>
-                  <strong>Phone</strong>
+                  <p className="text-white font-extrabold">Phone</p>
                   <p>+254 755 637 745</p>
                 </div>
               </div>
-              <div className="contact-item">
-                <span className="contact-icon">✉️</span>
+
+              <div className="flex items-start gap-3">
+                <div className="size-10 rounded-2xl bg-white/5 flex items-center justify-center shrink-0">
+                  <Mail className="size-5 text-primary" />
+                </div>
                 <div>
-                  <strong>Email</strong>
+                  <p className="text-white font-extrabold">Email</p>
                   <p>info@dcutawala.org</p>
                   <p>utawaladc@gmail.com</p>
                 </div>
@@ -159,25 +117,10 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <div className="footer-divider"></div>
-          <div className="footer-bottom-content">
-            <p>
-              &copy; {currentYear} Deliverance Church Utawala. All rights
-              reserved.
-            </p>
-            <div className="footer-bottom-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#contact" onClick={() => scrollToSection("contact")}>
-                Contact
-              </a>
-            </div>
-          </div>
+        <div className="border-t border-white/5 pt-8 text-center text-slate-500 text-xs">
+          © {new Date().getFullYear()} Deliverance Church Utawala. All rights reserved.
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
