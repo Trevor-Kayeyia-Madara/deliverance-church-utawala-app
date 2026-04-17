@@ -1,30 +1,57 @@
-# React + TypeScript + Vite
+# Deliverance Church Utawala (Next.js)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-ready church web app built with:
 
-Currently, two official plugins are available:
+- Next.js (App Router) + React (JavaScript only)
+- Tailwind CSS (custom theme in `tailwind.config.js`)
+- Next.js Route Handlers (`app/api/*`) + Prisma
+- PostgreSQL (recommended) or MySQL
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup
 
-## Expanding the ESLint configuration
+1) Install dependencies:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2) Configure environment variables:
+
+- Copy `.env.example` → `.env`
+- Update `DATABASE_URL` if needed
+
+3) Start a local Postgres database (optional but recommended):
+
+```bash
+docker compose up -d
+```
+
+4) Create tables + seed sample data:
+
+```bash
+npm run prisma:migrate
+npm run prisma:seed
+```
+
+5) Run the app:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Pages
+
+- `/` Homepage (hero, quick actions, featured sermons, live + giving)
+- `/sermons` Sermon browsing (featured, categories, search, pagination)
+- `/contact` Contact form (API-backed), giving sidebar, service times, map
+
+## API
+
+- `GET /api/sermons` (supports `page`, `limit`, `category`, `q`)
+- `GET /api/sermons/:id` (accepts sermon `id` or `slug`)
+- `POST /api/contact`
+- `POST /api/donations`
+
+If `DATABASE_URL` is not configured, APIs fall back to mock data so the UI remains usable during setup.

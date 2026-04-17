@@ -1,5 +1,6 @@
 import SectionWrapper from "@/components/SectionWrapper";
 import SermonsClient from "@/components/SermonsClient";
+import FeaturedSermon from "@/components/FeaturedSermon";
 
 export const metadata = {
   title: "Sermons | Deliverance Church Utawala",
@@ -24,9 +25,11 @@ export default function SermonsPage() {
       </div>
 
       <SectionWrapper className="py-10 sm:py-12">
+        <div className="mb-8">
+          <FeaturedSermon />
+        </div>
         <SermonsClient />
       </SectionWrapper>
     </div>
   );
 }
-
