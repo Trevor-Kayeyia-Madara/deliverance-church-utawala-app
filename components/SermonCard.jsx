@@ -1,23 +1,23 @@
 import { formatDate, formatDuration } from "@/lib/format";
 import { Play } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function SermonCard({ sermon }) {
   const duration = formatDuration(sermon.durationMinutes);
   return (
-    <a
-      href={sermon.videoUrl || "#"}
-      target={sermon.videoUrl ? "_blank" : undefined}
-      rel={sermon.videoUrl ? "noreferrer" : undefined}
+    <Link
+      href={`/sermons/${sermon.slug || sermon.id}`}
       className="group rounded-3xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors overflow-hidden"
     >
       <div className="relative aspect-video bg-secondary/25">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         {sermon.thumbnailUrl ? (
-          <img
+          <Image
             src={sermon.thumbnailUrl}
             alt={sermon.title}
-            className="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-            loading="lazy"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
           />
         ) : (
           <div className="h-full w-full" />
@@ -47,6 +47,6 @@ export default function SermonCard({ sermon }) {
           Watch
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

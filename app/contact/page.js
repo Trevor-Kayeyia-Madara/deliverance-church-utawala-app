@@ -2,6 +2,8 @@ import SectionWrapper from "@/components/SectionWrapper";
 import ContactForm from "@/components/ContactForm";
 import DonationCard from "@/components/DonationCard";
 import ServiceTimesCard from "@/components/ServiceTimesCard";
+import { SITE } from "@/lib/siteConfig";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Contact | Deliverance Church Utawala",
@@ -35,7 +37,15 @@ export default function ContactPage() {
                 We typically respond within 24–48 hours.
               </p>
               <div className="mt-6">
-                <ContactForm />
+                <Suspense
+                  fallback={
+                    <div className="rounded-2xl border border-white/10 bg-background/40 p-5 text-white/70 font-bold">
+                      Loading form…
+                    </div>
+                  }
+                >
+                  <ContactForm />
+                </Suspense>
               </div>
             </div>
 
@@ -46,25 +56,25 @@ export default function ContactPage() {
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Address</p>
                     <p className="mt-1 font-extrabold">
-                      Utawala, Nairobi, Kenya
+                      {SITE.contact.addressLine1}
                     </p>
                   </div>
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Phone</p>
                     <a
-                      href="tel:+254700000000"
+                      href={`tel:${SITE.contact.phoneTel}`}
                       className="mt-1 inline-block font-extrabold hover:text-accent"
                     >
-                      +254 700 000 000
+                      {SITE.contact.phoneDisplay}
                     </a>
                   </div>
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Email</p>
                     <a
-                      href="mailto:info@deliveranceutawala.org"
+                      href={`mailto:${SITE.contact.email}`}
                       className="mt-1 inline-block font-extrabold hover:text-accent"
                     >
-                      info@deliveranceutawala.org
+                      {SITE.contact.email}
                     </a>
                   </div>
                 </div>
@@ -74,7 +84,9 @@ export default function ContactPage() {
                 className="w-full h-[320px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps?q=Utawala%2C%20Nairobi%2C%20Kenya&output=embed"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(
+                  `${SITE.contact.addressLine2}, ${SITE.contact.addressLine1}`,
+                )}&output=embed`}
               />
             </div>
           </div>
@@ -88,4 +100,3 @@ export default function ContactPage() {
     </div>
   );
 }
-

@@ -4,10 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { SITE } from "@/lib/siteConfig";
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/sermons", label: "Sermons" },
+  { href: "/ministries", label: "Ministries" },
+  { href: "/school", label: "School" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -28,7 +31,8 @@ export default function Navbar() {
               DC
             </span>
             <span className="hidden sm:block">
-              Deliverance Church <span className="text-accent">Utawala</span>
+              {SITE.name.split(" Utawala")[0]}{" "}
+              <span className="text-accent">Utawala</span>
             </span>
           </Link>
 
@@ -102,4 +106,3 @@ export default function Navbar() {
     </header>
   );
 }
-

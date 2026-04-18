@@ -24,7 +24,7 @@ const actions = [
     title: "Ministries",
     description: "Find where you belong",
     icon: LayoutGrid,
-    href: "/#ministries",
+    href: "/ministries",
   },
 ];
 
@@ -52,4 +52,3 @@ export default function QuickActions() {
     </div>
   );
 }
-

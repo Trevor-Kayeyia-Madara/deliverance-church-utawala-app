@@ -1,0 +1,33 @@
+{
+  "pdf": "visily-multiscreens.pdf",
+  "assets": [
+    {
+      "file": "design/reference/img_000.jpg",
+      "type": "jpg",
+      "bytes": 562251,
+      "width": 1488,
+      "height": 4121
+    },
+    {
+      "file": "design/reference/img_001.jpg",
+      "type": "jpg",
+      "bytes": 567583,
+      "width": 1488,
+      "height": 3414
+    },
+    {
+      "file": "design/reference/img_002.jpg",
+      "type": "jpg",
+      "bytes": 490302,
+      "width": 1488,
+      "height": 4051
+    },
+    {
+      "file": "design/reference/img_003.jpg",
+      "type": "jpg",
+      "bytes": 566599,
+      "width": 1488,
+      "height": 3606
+    }
+  ]
+}

@@ -54,4 +54,19 @@ Open `http://localhost:3000`.
 - `POST /api/contact`
 - `POST /api/donations`
 
+## YouTube Import (Sermons)
+
+Set the following in `.env`:
+
+- `YOUTUBE_API_KEY`
+- `YOUTUBE_PLAYLIST_ID` (recommended) **or** `YOUTUBE_CHANNEL_ID`
+
+Then sync into the database:
+
+```bash
+# Sign in via Google at /admin/youtube, then click "Sync Now"
+```
+
+If the DB has no sermons yet and YouTube env vars are configured, `GET /api/sermons` will also read directly from YouTube as a temporary fallback.
+
 If `DATABASE_URL` is not configured, APIs fall back to mock data so the UI remains usable during setup.

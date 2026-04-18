@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function ContactForm() {
   const [status, setStatus] = useState("idle");
+  const searchParams = useSearchParams();
+  const defaultSubject = searchParams.get("subject") || "";
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
-    subject: "",
+    subject: defaultSubject,
     message: "",
   });
 
@@ -114,4 +117,3 @@ export default function ContactForm() {
     </form>
   );
 }
-

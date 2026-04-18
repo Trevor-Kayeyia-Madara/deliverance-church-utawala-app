@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { toYouTubeEmbedUrl } from "@/lib/youtube";
-import { formatDate, formatDuration } from "@/lib/format";
 import Link from "next/link";
+import { formatDate, formatDuration } from "@/lib/format";
+import { toYouTubeEmbedUrl } from "@/lib/youtube";
 
 async function fetchLatest() {
   const res = await fetch("/api/sermons?limit=1", { cache: "no-store" });
@@ -20,12 +20,12 @@ export default function FeaturedSermon() {
 
   if (isLoading) {
     return (
-      <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden animate-pulse">
+      <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 animate-pulse">
         <div className="aspect-video bg-white/5" />
         <div className="p-6">
-          <div className="h-4 w-32 bg-white/10 rounded" />
-          <div className="mt-3 h-6 w-2/3 bg-white/10 rounded" />
-          <div className="mt-2 h-4 w-1/2 bg-white/10 rounded" />
+          <div className="h-4 w-32 rounded bg-white/10" />
+          <div className="mt-3 h-6 w-2/3 rounded bg-white/10" />
+          <div className="mt-2 h-4 w-1/2 rounded bg-white/10" />
         </div>
       </div>
     );
@@ -37,7 +37,7 @@ export default function FeaturedSermon() {
   const duration = formatDuration(sermon.durationMinutes);
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
       <div className="aspect-video bg-background/40">
         {embed ? (
           <iframe
@@ -49,7 +49,7 @@ export default function FeaturedSermon() {
           />
         ) : null}
       </div>
-      <div className="p-6 sm:p-7 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-7">
         <div>
           <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">
             Featured Sermon
@@ -57,15 +57,15 @@ export default function FeaturedSermon() {
           <h2 className="mt-3 text-2xl sm:text-3xl font-black leading-tight">
             {sermon.title}
           </h2>
-          <p className="mt-2 text-white/70 font-bold text-sm">
+          <p className="mt-2 text-sm font-bold text-white/70">
             {formatDate(sermon.date)}
-            {duration ? ` • ${duration}` : ""}
-            {sermon.speaker ? ` • ${sermon.speaker}` : ""}
+            {duration ? ` | ${duration}` : ""}
+            {sermon.speaker ? ` | ${sermon.speaker}` : ""}
           </p>
         </div>
         <Link
           href="/sermons"
-          className="inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-6 py-3 hover:bg-accent transition-colors"
+          className="inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 font-extrabold text-black transition-colors hover:bg-accent"
         >
           Browse Sermons
         </Link>

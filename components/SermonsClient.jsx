@@ -11,9 +11,11 @@ async function fetchSermons({ page, category, q }) {
   params.set("limit", "9");
   if (category) params.set("category", category);
   if (q) params.set("q", q);
+
   const res = await fetch(`/api/sermons?${params.toString()}`, {
     cache: "no-store",
   });
+
   if (!res.ok) throw new Error("Failed to load sermons");
   return res.json();
 }
@@ -37,6 +39,7 @@ export default function SermonsClient() {
   const total = data?.total || 0;
   const limit = data?.limit || 9;
   const totalPages = Math.max(1, Math.ceil(total / limit));
+  const items = Array.isArray(data?.items) ? data.items : [];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -50,12 +53,12 @@ export default function SermonsClient() {
               <Search className="size-4 text-white/50" />
               <input
                 value={q}
-                onChange={(e) => {
+                onChange={(event) => {
                   setPage(1);
-                  setQ(e.target.value);
+                  setQ(event.target.value);
                 }}
-                placeholder="Title or speaker…"
-                className="w-full bg-transparent outline-none text-sm placeholder:text-white/40"
+                placeholder="Title or speaker..."
+                className="w-full bg-transparent text-sm outline-none placeholder:text-white/40"
               />
             </div>
           </div>
@@ -78,29 +81,29 @@ export default function SermonsClient() {
               >
                 All
               </button>
-              {categories.map((c) => (
+              {categories.map((item) => (
                 <button
-                  key={c.slug}
+                  key={item.slug}
                   type="button"
                   onClick={() => {
                     setPage(1);
-                    setCategory(c.slug);
+                    setCategory(item.slug);
                   }}
                   className={[
                     "px-3 py-2 rounded-xl text-sm font-extrabold border transition-colors",
-                    category === c.slug
+                    category === item.slug
                       ? "bg-primary text-black border-primary"
                       : "bg-white/5 border-white/10 text-white/75 hover:bg-white/10",
                   ].join(" ")}
                 >
-                  {c.name}
+                  {item.name}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="mt-6 text-xs text-white/50">
-            {isFetching ? "Updating…" : `${total} sermon${total === 1 ? "" : "s"} found`}
+            {isFetching ? "Updating..." : `${total} sermon${total === 1 ? "" : "s"} found`}
           </div>
         </div>
       </div>
@@ -108,10 +111,10 @@ export default function SermonsClient() {
       <div className="lg:col-span-9">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            {Array.from({ length: 9 }).map((_, i) => (
+            {Array.from({ length: 9 }).map((_, index) => (
               <div
-                key={i}
-                className="rounded-3xl border border-white/10 bg-white/5 h-[320px] animate-pulse"
+                key={index}
+                className="h-[320px] rounded-3xl border border-white/10 bg-white/5 animate-pulse"
               />
             ))}
           </div>
@@ -119,10 +122,10 @@ export default function SermonsClient() {
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-white/80">
             Unable to load sermons right now.
           </div>
-        ) : data.items.length ? (
+        ) : items.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            {data.items.map((s) => (
-              <SermonCard key={s.id} sermon={s} />
+            {items.map((sermon) => (
+              <SermonCard key={sermon.id} sermon={sermon} />
             ))}
           </div>
         ) : (
@@ -135,8 +138,8 @@ export default function SermonsClient() {
           <button
             type="button"
             disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-extrabold disabled:opacity-40 hover:bg-white/10 transition-colors"
+            onClick={() => setPage((currentPage) => Math.max(1, currentPage - 1))}
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-extrabold transition-colors hover:bg-white/10 disabled:opacity-40"
           >
             Previous
           </button>
@@ -146,8 +149,10 @@ export default function SermonsClient() {
           <button
             type="button"
             disabled={page >= totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-extrabold disabled:opacity-40 hover:bg-white/10 transition-colors"
+            onClick={() =>
+              setPage((currentPage) => Math.min(totalPages, currentPage + 1))
+            }
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-extrabold transition-colors hover:bg-white/10 disabled:opacity-40"
           >
             Next
           </button>

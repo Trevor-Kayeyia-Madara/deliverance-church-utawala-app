@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { MOCK_SERMONS } from "@/lib/mockData";
+import { getYouTubeSermonById, hasYouTubeRuntimeSource } from "@/lib/sermonsData";
 
 function normalizeSermon(s) {
   return {
@@ -23,6 +24,15 @@ export async function GET(_request, { params }) {
   const id = params?.id;
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 
+  if (hasYouTubeRuntimeSource()) {
+    try {
+      const sermon = await getYouTubeSermonById(id);
+      if (sermon) return NextResponse.json(sermon);
+    } catch {
+      // Fall through to DB/mock data.
+    }
+  }
+
   try {
     const sermon =
       (await prisma.sermon.findUnique({
@@ -42,4 +52,3 @@ export async function GET(_request, { params }) {
     return NextResponse.json(sermon);
   }
 }
-

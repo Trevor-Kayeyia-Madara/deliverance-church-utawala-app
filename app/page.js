@@ -77,10 +77,10 @@ export default function HomePage() {
               for every season.
             </p>
             <Link
-              href="/contact"
+              href="/ministries"
               className="mt-7 inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-6 py-3 hover:bg-accent transition-colors"
             >
-              Join a Ministry
+              Explore Ministries
             </Link>
           </div>
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -102,6 +102,40 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper className="py-12 sm:py-16">
+        <div className="rounded-3xl bg-darkAccent/25 border border-darkAccent/35 overflow-hidden">
+          <div className="p-7 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-8">
+              <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">
+                Church School
+              </p>
+              <h2 className="mt-3 text-3xl sm:text-4xl font-black leading-tight">
+                Building strong foundations for learners.
+              </h2>
+              <p className="mt-4 text-white/80 max-w-2xl">
+                Our school complements church life by nurturing character,
+                discipline, and excellence.
+              </p>
+            </div>
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-stretch">
+              <Link
+                href="/school"
+                className="inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-6 py-3.5 hover:bg-accent transition-colors"
+              >
+                View School
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-xl bg-white/5 border border-white/10 px-6 py-3.5 font-bold hover:bg-white/10 transition-colors"
+              >
+                Admissions Enquiry
+              </Link>
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-primary via-accent to-primary" />
         </div>
       </SectionWrapper>
 

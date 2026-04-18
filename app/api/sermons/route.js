@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { MOCK_CATEGORIES, MOCK_SERMONS } from "@/lib/mockData";
+import { getYouTubeSermonsCollection, hasYouTubeRuntimeSource } from "@/lib/sermonsData";
 
 function safeInt(value, fallback) {
   const n = Number.parseInt(String(value || ""), 10);
@@ -30,6 +31,15 @@ export async function GET(request) {
   const limit = Math.min(safeInt(searchParams.get("limit"), 9), 48);
   const category = searchParams.get("category");
   const q = searchParams.get("q");
+
+  if (hasYouTubeRuntimeSource()) {
+    try {
+      const youtubeData = await getYouTubeSermonsCollection({ page, limit, q });
+      return NextResponse.json(youtubeData);
+    } catch {
+      // Fall through to DB/mock data so the site still renders if YouTube is unavailable.
+    }
+  }
 
   const where = {
     ...(category ? { category: { slug: category } } : {}),
@@ -89,4 +99,3 @@ export async function GET(request) {
     });
   }
 }
-

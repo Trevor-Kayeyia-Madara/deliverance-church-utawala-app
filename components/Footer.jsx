@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE } from "@/lib/siteConfig";
 
 export default function Footer() {
   return (
@@ -11,7 +12,8 @@ export default function Footer() {
                 DC
               </span>
               <span>
-                Deliverance Church <span className="text-accent">Utawala</span>
+                {SITE.name.split(" Utawala")[0]}{" "}
+                <span className="text-accent">Utawala</span>
               </span>
             </div>
             <p className="mt-4 text-white/70 max-w-md">
@@ -31,6 +33,15 @@ export default function Footer() {
                 <Link className="text-white/75 hover:text-white" href="/sermons">
                   Sermons
                 </Link>
+                <Link
+                  className="text-white/75 hover:text-white"
+                  href="/ministries"
+                >
+                  Ministries
+                </Link>
+                <Link className="text-white/75 hover:text-white" href="/school">
+                  School
+                </Link>
                 <Link className="text-white/75 hover:text-white" href="/contact">
                   Contact
                 </Link>
@@ -43,7 +54,7 @@ export default function Footer() {
               <div className="mt-3 flex flex-col gap-2">
                 <a
                   className="text-white/75 hover:text-white"
-                  href="https://www.youtube.com"
+                  href={SITE.social.youtube}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -51,11 +62,19 @@ export default function Footer() {
                 </a>
                 <a
                   className="text-white/75 hover:text-white"
-                  href="https://www.facebook.com"
+                  href={SITE.social.facebook}
                   target="_blank"
                   rel="noreferrer"
                 >
                   Facebook
+                </a>
+                <a
+                  className="text-white/75 hover:text-white"
+                  href={SITE.social.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Instagram
                 </a>
               </div>
             </div>
@@ -86,4 +105,3 @@ export default function Footer() {
     </footer>
   );
 }
-

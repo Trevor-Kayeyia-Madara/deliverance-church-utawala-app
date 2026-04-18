@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PhoneCall, Play } from "lucide-react";
+import { SITE } from "@/lib/siteConfig";
 
 export default function HeroSection() {
   return (
@@ -21,7 +22,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5 }}
             className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase"
           >
-            Welcome Home
+            {SITE.tagline}
           </motion.p>
 
           <motion.h1
@@ -68,8 +69,8 @@ export default function HeroSection() {
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { k: "Service", v: "Sun 10:00 AM" },
-              { k: "Location", v: "Utawala, Nairobi" },
+              { k: "Service", v: SITE.serviceTimes[0]?.time ? `${SITE.serviceTimes[0].day} ${SITE.serviceTimes[0].time}` : "Service Times" },
+              { k: "Location", v: SITE.location.replace(", Kenya", "") },
               { k: "Live", v: "Weekly Stream" },
             ].map((stat) => (
               <div
@@ -88,4 +89,3 @@ export default function HeroSection() {
     </section>
   );
 }
-

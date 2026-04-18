@@ -1,10 +1,5 @@
 import { Clock } from "lucide-react";
-
-const serviceTimes = [
-  { day: "Sunday", time: "10:00 AM", label: "Celebration Service" },
-  { day: "Wednesday", time: "6:00 PM", label: "Midweek Service" },
-  { day: "Friday", time: "6:00 PM", label: "Prayer & Worship" },
-];
+import { SITE } from "@/lib/siteConfig";
 
 export default function ServiceTimesCard() {
   return (
@@ -16,7 +11,7 @@ export default function ServiceTimesCard() {
         Join us every week.
       </h3>
       <div className="mt-5 flex flex-col gap-3">
-        {serviceTimes.map((s) => (
+        {SITE.serviceTimes.map((s) => (
           <div
             key={s.label}
             className="rounded-2xl border border-white/10 bg-background/60 p-4 flex items-start gap-3"
@@ -36,4 +31,3 @@ export default function ServiceTimesCard() {
     </div>
   );
 }
-

@@ -16,6 +16,8 @@ export default function SermonsPreview() {
     queryFn: fetchSermons,
   });
 
+  const items = Array.isArray(data?.items) ? data.items : [];
+
   return (
     <div>
       <div className="flex items-end justify-between gap-4">
@@ -50,8 +52,12 @@ export default function SermonsPreview() {
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/80">
             Unable to load sermons right now.
           </div>
+        ) : !items.length ? (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/80 md:col-span-3">
+            No sermons available yet.
+          </div>
         ) : (
-          data.items.map((s) => <SermonCard key={s.id} sermon={s} />)
+          items.map((s) => <SermonCard key={s.id} sermon={s} />)
         )}
       </div>
 
@@ -66,4 +72,3 @@ export default function SermonsPreview() {
     </div>
   );
 }
-
