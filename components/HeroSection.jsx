@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PhoneCall, Play } from "lucide-react";
-import { SITE } from "@/lib/siteConfig";
+import { useSite } from "@/lib/siteContext";
 
 export default function HeroSection() {
+  const site = useSite();
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0">
@@ -22,7 +23,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5 }}
             className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase"
           >
-            {SITE.tagline}
+            {site.tagline}
           </motion.p>
 
           <motion.h1
@@ -69,8 +70,13 @@ export default function HeroSection() {
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { k: "Service", v: SITE.serviceTimes[0]?.time ? `${SITE.serviceTimes[0].day} ${SITE.serviceTimes[0].time}` : "Service Times" },
-              { k: "Location", v: SITE.location.replace(", Kenya", "") },
+              {
+                k: "Service",
+                v: site.serviceTimes[0]?.time
+                  ? `${site.serviceTimes[0].day} ${site.serviceTimes[0].time}`
+                  : "Service Times",
+              },
+              { k: "Location", v: site.location.replace(", Kenya", "") },
               { k: "Live", v: "Weekly Stream" },
             ].map((stat) => (
               <div

@@ -29,6 +29,32 @@ function youtubeThumb(url) {
 }
 
 async function main() {
+  const siteDefaults = {
+    siteName: "Deliverance Church Utawala",
+    shortName: "DC Utawala",
+    tagline: "The Church of Choice",
+    location: "Utawala, Nairobi, Kenya",
+    addressLine1: "Utawala, Nairobi, Kenya",
+    addressLine2: "Utawala Road",
+    phoneDisplay: "+254 700 000 000",
+    phoneTel: "+254700000000",
+    email: "info@deliveranceutawala.org",
+    youtubeUrl: "https://www.youtube.com",
+    facebookUrl: "https://www.facebook.com",
+    instagramUrl: "https://www.instagram.com",
+    liveEmbedUrl: null,
+  };
+
+  const existingSettings = await prisma.siteSettings.findFirst();
+  if (existingSettings) {
+    await prisma.siteSettings.update({
+      where: { id: existingSettings.id },
+      data: siteDefaults,
+    });
+  } else {
+    await prisma.siteSettings.create({ data: siteDefaults });
+  }
+
   const categories = [
     "Faith",
     "Prayer",
@@ -109,6 +135,83 @@ async function main() {
         description: sermon.description,
         categoryId: category ? category.id : null,
       },
+    });
+  }
+
+  function nextDow(dow) {
+    const today = new Date();
+    const next = new Date(today);
+    next.setHours(10, 0, 0, 0);
+    const diff = (dow + 7 - next.getDay()) % 7 || 7;
+    next.setDate(next.getDate() + diff);
+    return next;
+  }
+
+  const upcomingEvents = [
+    { title: "Sunday Service", startAt: nextDow(0), meta: "Sun â€¢ 10:00 AM" },
+    {
+      title: "Midweek Service",
+      startAt: (() => {
+        const d = nextDow(3);
+        d.setHours(18, 0, 0, 0);
+        return d;
+      })(),
+      meta: "Wed â€¢ 6:00 PM",
+    },
+    {
+      title: "Prayer & Worship",
+      startAt: (() => {
+        const d = nextDow(5);
+        d.setHours(18, 0, 0, 0);
+        return d;
+      })(),
+      meta: "Fri â€¢ 6:00 PM",
+    },
+  ];
+
+  for (const event of upcomingEvents) {
+    const slug = `${slugify(event.title)}-${event.startAt
+      .toISOString()
+      .slice(0, 10)}`;
+    await prisma.event.upsert({
+      where: { slug },
+      update: {
+        title: event.title,
+        startAt: event.startAt,
+        description: `Auto-seeded: ${event.meta}`,
+        isPublished: true,
+      },
+      create: {
+        slug,
+        title: event.title,
+        startAt: event.startAt,
+        description: `Auto-seeded: ${event.meta}`,
+        isPublished: true,
+      },
+    });
+  }
+
+  const pastors = [
+    {
+      name: "Ps. Emmanuel Kokonyo",
+      roleTitle: "Senior Pastor",
+      sortOrder: 1,
+      isPublished: true,
+    },
+    {
+      name: "Ps. Lucy Kokonyo",
+      roleTitle: "Associate Pastor",
+      sortOrder: 2,
+      isPublished: true,
+    },
+  ];
+
+  for (const pastor of pastors) {
+    const slug = slugify(pastor.name);
+    await prisma.pastor.upsert({
+      where: { slug },
+      update: { ...pastor, slug },
+      create: { ...pastor, slug },
     });
   }
 

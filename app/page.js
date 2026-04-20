@@ -5,6 +5,9 @@ import DonationCard from "@/components/DonationCard";
 import SermonsPreview from "@/components/SermonsPreview";
 import QuickActions from "@/components/QuickActions";
 import Link from "next/link";
+import EventsSection from "@/components/EventsSection";
+import PastorsSection from "@/components/PastorsSection";
+import OnlinePresenceSection from "@/components/OnlinePresenceSection";
 
 export default function HomePage() {
   return (
@@ -20,6 +23,8 @@ export default function HomePage() {
       </SectionWrapper>
 
       <SectionWrapper className="py-12 sm:py-16" id="events">
+        <EventsSection />
+        {/*
         <div className="rounded-3xl border border-white/10 bg-white/5 p-7 sm:p-10">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
@@ -61,6 +66,11 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        */}
+      </SectionWrapper>
+
+      <SectionWrapper className="py-12 sm:py-16" id="pastors">
+        <PastorsSection />
       </SectionWrapper>
 
       <SectionWrapper className="py-12 sm:py-16" id="ministries">
@@ -142,6 +152,8 @@ export default function HomePage() {
       <SectionWrapper className="py-12 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7">
+            <OnlinePresenceSection />
+            {/*
             <div className="rounded-3xl bg-secondary/20 border border-secondary/30 p-7 sm:p-10 h-full">
               <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">
                 Online Presence
@@ -172,6 +184,7 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
+            */}
           </div>
           <div className="lg:col-span-5 flex flex-col gap-6">
             <LiveTVCard />

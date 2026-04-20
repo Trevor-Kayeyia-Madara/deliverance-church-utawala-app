@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -51,9 +51,64 @@ model Donation {
   name      String
   email     String?
   phone     String?
-  amount    Decimal
+  amount    Decimal  @db.Decimal(10, 2)
   currency  String   @default("KES")
   note      String?
   method    String?  // optional (e.g. "mpesa", "card", "bank")
   createdAt DateTime @default(now())
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  location    String?
+  posterUrl   String?
+  startAt     DateTime
+  endAt       DateTime?
+  isPublished Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, startAt])
+}
+
+model Pastor {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  roleTitle   String?
+  bio         String?
+  photoUrl    String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, sortOrder, name])
+}
+
+model SiteSettings {
+  id           Int     @id @default(autoincrement())
+  siteName     String  @default("Deliverance Church Utawala")
+  shortName    String  @default("DC Utawala")
+  tagline      String  @default("The Church of Choice")
+  location     String  @default("Utawala, Nairobi, Kenya")
+
+  addressLine1 String?
+  addressLine2 String?
+  phoneDisplay String?
+  phoneTel     String?
+  email        String?
+
+  youtubeUrl   String?
+  facebookUrl  String?
+  instagramUrl String?
+  liveEmbedUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,22 +1,10 @@
 import { NextResponse } from "next/server";
 import { syncYouTubeSermons } from "@/lib/sermonSync";
-import { auth } from "@/auth";
-
-function parseAllowedEmails() {
-  const raw = process.env.AUTH_ALLOWED_EMAILS || "";
-  return raw
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean);
-}
+import { getAdminSession } from "@/lib/adminAuth.server";
 
 export async function POST(request) {
-  const session = await auth().catch(() => null);
-  const allowed = parseAllowedEmails();
-  const email = String(session?.user?.email || "").toLowerCase();
-  const isAllowedUser = !!session?.user && (!allowed.length || allowed.includes(email));
-
-  if (!isAllowedUser) {
+  const session = await getAdminSession();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

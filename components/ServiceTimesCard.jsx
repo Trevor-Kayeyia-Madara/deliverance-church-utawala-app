@@ -1,7 +1,10 @@
+"use client";
+
 import { Clock } from "lucide-react";
-import { SITE } from "@/lib/siteConfig";
+import { useSite } from "@/lib/siteContext";
 
 export default function ServiceTimesCard() {
+  const site = useSite();
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-7">
       <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">
@@ -11,7 +14,7 @@ export default function ServiceTimesCard() {
         Join us every week.
       </h3>
       <div className="mt-5 flex flex-col gap-3">
-        {SITE.serviceTimes.map((s) => (
+        {site.serviceTimes.map((s) => (
           <div
             key={s.label}
             className="rounded-2xl border border-white/10 bg-background/60 p-4 flex items-start gap-3"

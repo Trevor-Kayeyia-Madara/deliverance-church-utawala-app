@@ -1,12 +1,13 @@
 import Link from "next/link";
 import SectionWrapper from "@/components/SectionWrapper";
-import { SITE } from "@/lib/siteConfig";
+import { getSiteSettings } from "@/lib/siteSettings.server";
 
 export const metadata = {
   title: "School | Deliverance Church Utawala",
 };
 
-export default function SchoolPage() {
+export default async function SchoolPage() {
+  const site = await getSiteSettings();
   return (
     <div>
       <div className="relative overflow-hidden">
@@ -16,7 +17,7 @@ export default function SchoolPage() {
             School
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black leading-tight">
-            {SITE.school.tagline}
+            {site.school.tagline}
           </h1>
           <p className="mt-4 text-white/80 max-w-2xl">
             Our church school nurtures character, excellence, and spiritual

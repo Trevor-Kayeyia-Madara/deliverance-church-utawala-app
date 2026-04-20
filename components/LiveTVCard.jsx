@@ -1,7 +1,11 @@
+"use client";
+
 import { Tv } from "lucide-react";
+import { useSite } from "@/lib/siteContext";
 
 export default function LiveTVCard() {
-  const embedUrl = process.env.NEXT_PUBLIC_LIVE_EMBED_URL;
+  const site = useSite();
+  const embedUrl = site.liveEmbedUrl || process.env.NEXT_PUBLIC_LIVE_EMBED_URL;
   return (
     <div className="rounded-3xl bg-darkAccent/25 border border-darkAccent/35 overflow-hidden">
       <div className="p-6 sm:p-7">
@@ -38,7 +42,7 @@ export default function LiveTVCard() {
               </span>
               <p className="mt-3 font-extrabold">Live stream embed</p>
               <p className="mt-1 text-sm text-white/60">
-                Set `NEXT_PUBLIC_LIVE_EMBED_URL` to enable.
+                Set `NEXT_PUBLIC_LIVE_EMBED_URL` or update it in Admin â†’ Settings.
               </p>
             </div>
           </div>

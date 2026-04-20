@@ -5,7 +5,7 @@ Production-ready church web app built with:
 - Next.js (App Router) + React (JavaScript only)
 - Tailwind CSS (custom theme in `tailwind.config.js`)
 - Next.js Route Handlers (`app/api/*`) + Prisma
-- PostgreSQL (recommended) or MySQL
+- MySQL / MariaDB (cPanel-friendly)
 
 ## Setup
 
@@ -20,18 +20,22 @@ npm install
 - Copy `.env.example` → `.env`
 - Update `DATABASE_URL` if needed
 
-3) Start a local Postgres database (optional but recommended):
+3) Start a local MySQL/MariaDB database (optional but recommended):
 
 ```bash
 docker compose up -d
 ```
 
-4) Create tables + seed sample data:
+4) Create tables + seed sample data (Prisma):
 
 ```bash
 npm run prisma:migrate
 npm run prisma:seed
 ```
+
+If you can't run Prisma migrations on your host (common on shared hosting),
+import `prisma/mysql_init.sql` in phpMyAdmin, then run `npm run prisma:seed`
+from a machine where Prisma can connect to your cPanel database.
 
 5) Run the app:
 

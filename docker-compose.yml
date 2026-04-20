@@ -1,16 +1,16 @@
 services:
   db:
-    image: postgres:16
+    image: mariadb:10.11
     restart: unless-stopped
     environment:
-      POSTGRES_USER: church
-      POSTGRES_PASSWORD: church_password
-      POSTGRES_DB: church_app
+      MARIADB_DATABASE: church_app
+      MARIADB_USER: church
+      MARIADB_PASSWORD: church_password
+      MARIADB_ROOT_PASSWORD: church_root_password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - church_db_data:/var/lib/postgresql/data
+      - church_db_data:/var/lib/mysql/data
 
 volumes:
   church_db_data:
-

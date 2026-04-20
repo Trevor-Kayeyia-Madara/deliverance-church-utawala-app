@@ -2,8 +2,9 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { SiteProvider } from "@/lib/siteContext";
 
-export default function Providers({ children }) {
+export default function Providers({ children, site }) {
   const [client] = useState(
     () =>
       new QueryClient({
@@ -16,6 +17,9 @@ export default function Providers({ children }) {
       }),
   );
 
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={client}>
+      <SiteProvider value={site}>{children}</SiteProvider>
+    </QueryClientProvider>
+  );
 }
-

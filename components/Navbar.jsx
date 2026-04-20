@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { SITE } from "@/lib/siteConfig";
+import { useSite } from "@/lib/siteContext";
 
 const links = [
   { href: "/", label: "Home" },
@@ -17,6 +17,7 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const site = useSite();
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/85 backdrop-blur">
@@ -31,7 +32,7 @@ export default function Navbar() {
               DC
             </span>
             <span className="hidden sm:block">
-              {SITE.name.split(" Utawala")[0]}{" "}
+              {site.name.split(" Utawala")[0]}{" "}
               <span className="text-accent">Utawala</span>
             </span>
           </Link>

@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import { SITE } from "@/lib/siteConfig";
+import { useSite } from "@/lib/siteContext";
 
 export default function Footer() {
+  const site = useSite();
   return (
     <footer className="border-t border-white/10 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -12,7 +15,7 @@ export default function Footer() {
                 DC
               </span>
               <span>
-                {SITE.name.split(" Utawala")[0]}{" "}
+                {site.name.split(" Utawala")[0]}{" "}
                 <span className="text-accent">Utawala</span>
               </span>
             </div>
@@ -54,7 +57,7 @@ export default function Footer() {
               <div className="mt-3 flex flex-col gap-2">
                 <a
                   className="text-white/75 hover:text-white"
-                  href={SITE.social.youtube}
+                  href={site.social.youtube}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -62,7 +65,7 @@ export default function Footer() {
                 </a>
                 <a
                   className="text-white/75 hover:text-white"
-                  href={SITE.social.facebook}
+                  href={site.social.facebook}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -70,7 +73,7 @@ export default function Footer() {
                 </a>
                 <a
                   className="text-white/75 hover:text-white"
-                  href={SITE.social.instagram}
+                  href={site.social.instagram}
                   target="_blank"
                   rel="noreferrer"
                 >

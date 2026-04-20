@@ -2,14 +2,15 @@ import SectionWrapper from "@/components/SectionWrapper";
 import ContactForm from "@/components/ContactForm";
 import DonationCard from "@/components/DonationCard";
 import ServiceTimesCard from "@/components/ServiceTimesCard";
-import { SITE } from "@/lib/siteConfig";
 import { Suspense } from "react";
+import { getSiteSettings } from "@/lib/siteSettings.server";
 
 export const metadata = {
   title: "Contact | Deliverance Church Utawala",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSiteSettings();
   return (
     <div>
       <div className="relative overflow-hidden">
@@ -56,25 +57,25 @@ export default function ContactPage() {
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Address</p>
                     <p className="mt-1 font-extrabold">
-                      {SITE.contact.addressLine1}
+                      {site.contact.addressLine1}
                     </p>
                   </div>
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Phone</p>
                     <a
-                      href={`tel:${SITE.contact.phoneTel}`}
+                      href={`tel:${site.contact.phoneTel}`}
                       className="mt-1 inline-block font-extrabold hover:text-accent"
                     >
-                      {SITE.contact.phoneDisplay}
+                      {site.contact.phoneDisplay}
                     </a>
                   </div>
                   <div className="rounded-2xl bg-background/60 border border-white/10 p-4">
                     <p className="text-white/60 font-bold">Email</p>
                     <a
-                      href={`mailto:${SITE.contact.email}`}
+                      href={`mailto:${site.contact.email}`}
                       className="mt-1 inline-block font-extrabold hover:text-accent"
                     >
-                      {SITE.contact.email}
+                      {site.contact.email}
                     </a>
                   </div>
                 </div>
@@ -85,7 +86,7 @@ export default function ContactPage() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 src={`https://www.google.com/maps?q=${encodeURIComponent(
-                  `${SITE.contact.addressLine2}, ${SITE.contact.addressLine1}`,
+                  `${site.contact.addressLine2}, ${site.contact.addressLine1}`,
                 )}&output=embed`}
               />
             </div>
