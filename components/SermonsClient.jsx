@@ -41,6 +41,18 @@ export default function SermonsClient() {
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const items = Array.isArray(data?.items) ? data.items : [];
 
+  const sourcesLabel = useMemo(() => {
+    const sources = Array.isArray(data?.sources) ? data.sources : [];
+    if (!sources.length) return null;
+    const labels = sources.map((s) => {
+      if (s === "db") return "Database";
+      if (s === "youtube") return "YouTube";
+      if (s === "mock") return "Mock";
+      return s;
+    });
+    return labels.join(" + ");
+  }, [data?.sources]);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div className="lg:col-span-3">
@@ -104,6 +116,9 @@ export default function SermonsClient() {
 
           <div className="mt-6 text-xs text-white/50">
             {isFetching ? "Updating..." : `${total} sermon${total === 1 ? "" : "s"} found`}
+            {sourcesLabel ? (
+              <span className="block mt-1">Sources: {sourcesLabel}</span>
+            ) : null}
           </div>
         </div>
       </div>
@@ -161,4 +176,3 @@ export default function SermonsClient() {
     </div>
   );
 }
-

@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { MOCK_CATEGORIES, MOCK_SERMONS } from "@/lib/mockData";
-import { getYouTubeSermonsCollection, hasYouTubeRuntimeSource } from "@/lib/sermonsData";
+import { getYouTubeSermonsList, hasYouTubeRuntimeSource } from "@/lib/sermonsData";
+import { getYouTubeId } from "@/lib/youtube";
 
 function safeInt(value, fallback) {
   const n = Number.parseInt(String(value || ""), 10);
   return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function safeMaxResults(value, fallback) {
+  const n = safeInt(value, fallback);
+  return Math.min(Math.max(n, 1), 500);
 }
 
 function normalizeSermon(s) {
@@ -22,6 +28,7 @@ function normalizeSermon(s) {
     category: s.category
       ? { id: s.category.id, name: s.category.name, slug: s.category.slug }
       : null,
+    source: "db",
   };
 }
 
@@ -32,14 +39,9 @@ export async function GET(request) {
   const category = searchParams.get("category");
   const q = searchParams.get("q");
 
-  if (hasYouTubeRuntimeSource()) {
-    try {
-      const youtubeData = await getYouTubeSermonsCollection({ page, limit, q });
-      return NextResponse.json(youtubeData);
-    } catch {
-      // Fall through to DB/mock data so the site still renders if YouTube is unavailable.
-    }
-  }
+  const needCount = page * limit;
+  const includeYouTube =
+    hasYouTubeRuntimeSource() && (!category || category === "sermons");
 
   const where = {
     ...(category ? { category: { slug: category } } : {}),
@@ -54,6 +56,11 @@ export async function GET(request) {
       : {}),
   };
 
+  let dbCategories = null;
+  let dbTotal = 0;
+  let dbItems = [];
+  let usedMock = false;
+
   try {
     const [categories, total, items] = await Promise.all([
       prisma.category.findMany({ orderBy: { name: "asc" } }),
@@ -62,18 +69,13 @@ export async function GET(request) {
         where,
         include: { category: true },
         orderBy: { date: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
+        take: needCount,
       }),
     ]);
 
-    return NextResponse.json({
-      categories: categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
-      page,
-      limit,
-      total,
-      items: items.map(normalizeSermon),
-    });
+    dbCategories = categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }));
+    dbTotal = total;
+    dbItems = items.map(normalizeSermon);
   } catch {
     // Fallback when DATABASE_URL isn't configured yet.
     const filtered = MOCK_SERMONS.filter((s) => {
@@ -86,16 +88,69 @@ export async function GET(request) {
       return true;
     });
 
-    const start = (page - 1) * limit;
-    const items = filtered.slice(start, start + limit);
+    usedMock = true;
+    dbCategories = MOCK_CATEGORIES;
+    dbTotal = filtered.length;
+    dbItems = filtered.slice(0, needCount).map((s) => ({ ...s, source: "mock" }));
+  }
 
-    return NextResponse.json({
-      categories: MOCK_CATEGORIES,
-      page,
-      limit,
-      total: filtered.length,
-      items,
-      mocked: true,
+  let youtubeTotal = 0;
+  let youtubeItems = [];
+
+  if (includeYouTube) {
+    try {
+      const { total, items } = await getYouTubeSermonsList({
+        max: Math.max(needCount, safeMaxResults(process.env.YOUTUBE_MAX_RESULTS, 50)),
+        q,
+      });
+      youtubeTotal = total;
+      youtubeItems = items;
+    } catch {
+      // Ignore YouTube errors so the page still loads from DB/mock data.
+    }
+  }
+
+  const dbYouTubeIds = new Set(
+    dbItems.map((s) => getYouTubeId(s.videoUrl)).filter(Boolean),
+  );
+
+  let dedupedYouTubeTotal = 0;
+  const dedupedYouTubeItems = [];
+  for (const item of youtubeItems) {
+    if (dbYouTubeIds.has(item.id)) continue;
+    dedupedYouTubeItems.push(item);
+    dedupedYouTubeTotal += 1;
+  }
+
+  const merged = [...dbItems, ...dedupedYouTubeItems].sort((a, b) => {
+    const ad = Date.parse(a.date);
+    const bd = Date.parse(b.date);
+    if (Number.isFinite(ad) && Number.isFinite(bd)) return bd - ad;
+    return String(b.date || "").localeCompare(String(a.date || ""));
+  });
+
+  const start = (page - 1) * limit;
+  const items = merged.slice(start, start + limit);
+
+  const categoriesBySlug = new Map((dbCategories || []).map((c) => [c.slug, c]));
+  if (includeYouTube) {
+    categoriesBySlug.set("sermons", categoriesBySlug.get("sermons") || {
+      id: "sermons",
+      name: "Sermons",
+      slug: "sermons",
     });
   }
+
+  return NextResponse.json({
+    categories: Array.from(categoriesBySlug.values()),
+    page,
+    limit,
+    total: dbTotal + dedupedYouTubeTotal,
+    items,
+    mocked: usedMock ? true : undefined,
+    sources: [
+      usedMock ? "mock" : "db",
+      ...(includeYouTube && dedupedYouTubeItems.length ? ["youtube"] : []),
+    ],
+  });
 }

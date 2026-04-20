@@ -5,6 +5,14 @@ import Link from "next/link";
 
 export default function SermonCard({ sermon }) {
   const duration = formatDuration(sermon.durationMinutes);
+  const sourceBadge =
+    sermon.source === "youtube"
+      ? "YouTube"
+      : sermon.source === "db"
+        ? "Database"
+        : sermon.source === "mock"
+          ? "Mock"
+          : null;
   return (
     <Link
       href={`/sermons/${sermon.slug || sermon.id}`}
@@ -23,6 +31,13 @@ export default function SermonCard({ sermon }) {
           <div className="h-full w-full" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        {sourceBadge ? (
+          <div className="absolute right-4 top-4">
+            <span className="inline-flex items-center justify-center rounded-full bg-white/10 border border-white/10 px-3 py-1 text-[11px] font-black text-white/80 backdrop-blur">
+              {sourceBadge}
+            </span>
+          </div>
+        ) : null}
         <div className="absolute left-4 bottom-4 flex items-center gap-2">
           <span className="inline-flex items-center justify-center size-10 rounded-2xl bg-primary text-black shadow-lg">
             <Play className="size-5" />

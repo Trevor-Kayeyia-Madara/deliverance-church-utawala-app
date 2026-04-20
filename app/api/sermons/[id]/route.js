@@ -17,6 +17,7 @@ function normalizeSermon(s) {
     category: s.category
       ? { id: s.category.id, name: s.category.name, slug: s.category.slug }
       : null,
+    source: "db",
   };
 }
 

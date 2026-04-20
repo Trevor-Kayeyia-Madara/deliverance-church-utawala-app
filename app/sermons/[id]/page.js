@@ -46,6 +46,7 @@ async function getSermon(id) {
             slug: sermon.category.slug,
           }
         : null,
+      source: "db",
     };
   } catch {
     const fallback = MOCK_SERMONS.find((item) => item.id === id || item.slug === id);
@@ -126,4 +127,3 @@ export default async function SermonDetailPage({ params }) {
     </div>
   );
 }
-
