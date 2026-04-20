@@ -5,8 +5,8 @@ import Link from "next/link";
 import { formatDate, formatDuration } from "@/lib/format";
 import { toYouTubeEmbedUrl } from "@/lib/youtube";
 
-async function fetchLatest() {
-  const res = await fetch("/api/sermons?limit=1", { cache: "no-store" });
+async function fetchLatestYouTube() {
+  const res = await fetch("/api/sermons?limit=1&source=youtube", { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load sermon");
   const data = await res.json();
   return data.items?.[0] || null;
@@ -14,8 +14,8 @@ async function fetchLatest() {
 
 export default function FeaturedSermon() {
   const { data: sermon, isLoading } = useQuery({
-    queryKey: ["sermons", "featured"],
-    queryFn: fetchLatest,
+    queryKey: ["sermons", "featured", "youtube"],
+    queryFn: fetchLatestYouTube,
   });
 
   if (isLoading) {

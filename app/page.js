@@ -1,4 +1,5 @@
 import HeroSection from "@/components/HeroSection";
+import PastorsWelcomeSection from "@/components/PastorsWelcomeSection";
 import SectionWrapper from "@/components/SectionWrapper";
 import LiveTVCard from "@/components/LiveTVCard";
 import DonationCard from "@/components/DonationCard";
@@ -13,6 +14,7 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
+      <PastorsWelcomeSection />
 
       <SectionWrapper className="py-10 sm:py-14">
         <QuickActions />

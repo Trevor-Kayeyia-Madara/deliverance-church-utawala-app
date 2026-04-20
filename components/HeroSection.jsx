@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { PhoneCall, Play } from "lucide-react";
 import { useSite } from "@/lib/siteContext";
@@ -10,9 +11,17 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-background/65" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/10" />
+        <Image
+          src="/uploads/DCU%202026%20Theme.png"
+          alt="Deliverance Church Utawala 2026 theme background"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/55 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-accent/15" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
@@ -54,7 +63,7 @@ export default function HeroSection() {
           >
             <Link
               href="/sermons"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-black font-extrabold px-7 py-3.5 hover:bg-accent transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-black font-extrabold px-7 py-3.5 hover:bg-accent transition-colors shadow-lg shadow-black/20"
             >
               <Play className="size-5" />
               Watch Sermons
