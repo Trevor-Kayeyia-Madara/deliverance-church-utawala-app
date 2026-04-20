@@ -42,7 +42,7 @@ export default async function EventsSection() {
             Events
           </p>
           <h2 className="mt-3 text-3xl sm:text-4xl font-black">
-            Whatâ€™s happening this week.
+            Whats happening this week.
           </h2>
           <p className="mt-3 text-white/75 max-w-2xl">
             From worship nights to discipleship classes â€” thereâ€™s a place for
