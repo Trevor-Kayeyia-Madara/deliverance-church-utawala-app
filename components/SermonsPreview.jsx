@@ -5,7 +5,7 @@ import Link from "next/link";
 import SermonCard from "./SermonCard";
 
 async function fetchSermons() {
-  const res = await fetch("/api/sermons?limit=3", { cache: "no-store" });
+  const res = await fetch("/api/sermons?limit=3&source=db", { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load sermons");
   return res.json();
 }

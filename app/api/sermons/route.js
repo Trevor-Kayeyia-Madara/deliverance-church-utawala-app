@@ -38,10 +38,11 @@ export async function GET(request) {
   const limit = Math.min(safeInt(searchParams.get("limit"), 9), 48);
   const category = searchParams.get("category");
   const q = searchParams.get("q");
+  const source = (searchParams.get("source") || "").toLowerCase(); // "db" | "all" (default)
 
   const needCount = page * limit;
   const includeYouTube =
-    hasYouTubeRuntimeSource() && (!category || category === "sermons");
+    source !== "db" && hasYouTubeRuntimeSource() && (!category || category === "sermons");
 
   const where = {
     ...(category ? { category: { slug: category } } : {}),
