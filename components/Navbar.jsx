@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -18,6 +19,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const site = useSite();
+  const siteName = site?.name || "Deliverance Church Utawala";
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/85 backdrop-blur">
@@ -28,11 +30,18 @@ export default function Navbar() {
             className="flex items-center gap-3 font-black tracking-tight"
             onClick={() => setOpen(false)}
           >
-            <span className="inline-flex size-9 items-center justify-center rounded-xl bg-primary text-black">
-              DC
+            <span className="relative size-9 overflow-hidden rounded-xl border border-white/10 bg-white/5">
+              <Image
+                src="/logo.png"
+                alt={`${siteName} logo`}
+                fill
+                sizes="36px"
+                className="object-contain p-1"
+                priority
+              />
             </span>
             <span className="hidden sm:block">
-              {site.name.split(" Utawala")[0]}{" "}
+              {siteName.split(" Utawala")[0]}{" "}
               <span className="text-accent">Utawala</span>
             </span>
           </Link>
