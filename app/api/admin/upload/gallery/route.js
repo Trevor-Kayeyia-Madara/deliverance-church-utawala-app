@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { v4 as uuid } from "uuid";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import crypto from "node:crypto";
 import { getAdminSession } from "@/lib/adminAuth.server";
 
-const MAX_SIZE = 8 * 1024 * 1024; // 8MB
-const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+export const runtime = "nodejs";
+
+const MAX_BYTES = 8 * 1024 * 1024; // 8MB
+
+function extFromType(type) {
+  const t = String(type || "").toLowerCase();
+  if (t === "image/jpeg" || t === "image/jpg") return ".jpg";
+  if (t === "image/png") return ".png";
+  if (t === "image/webp") return ".webp";
+  if (t === "image/gif") return ".gif";
+  return null;
+}
 
 export async function POST(request) {
   const session = await getAdminSession();
@@ -21,26 +31,29 @@ export async function POST(request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: "File too large (max 8MB)" }, { status: 400 });
+    const ext = extFromType(file.type);
+    if (!ext) {
+      return NextResponse.json(
+        { error: "Unsupported image type. Use JPG/PNG/WebP/GIF." },
+        { status: 400 },
+      );
     }
 
-    const type = file.type;
-    if (!ALLOWED.has(type)) {
-      return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
+    if (file.size > MAX_BYTES) {
+      return NextResponse.json({ error: "File too large (max 8MB)" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const ext = type === "image/jpeg" ? ".jpg" : type === "image/png" ? ".png" : type === "image/webp" ? ".webp" : ".gif";
-    const filename = `${uuid()}${ext}`;
-    const uploadDir = join(process.cwd(), "public", "uploads", "gallery");
-    
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(join(uploadDir, filename), buffer);
+    const fileName = `${Date.now()}-${crypto.randomUUID()}${ext}`;
+    const absDir = path.join(process.cwd(), "public", "uploads", "gallery");
+    const absPath = path.join(absDir, fileName);
 
-    const url = `/uploads/gallery/${filename}`;
+    await mkdir(absDir, { recursive: true });
+    await writeFile(absPath, buffer);
+
+    const url = `/uploads/gallery/${fileName}`;
     return NextResponse.json({ ok: true, url });
   } catch (e) {
     return NextResponse.json(
