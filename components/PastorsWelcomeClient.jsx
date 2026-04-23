@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function PastorsWelcomeClient({ pastor }) {
-  if (!pastor) return null;
-
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
@@ -21,7 +19,7 @@ export default function PastorsWelcomeClient({ pastor }) {
             className="lg:col-span-5"
           >
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-white/5 border border-white/10">
-              {pastor.photoUrl ? (
+              {pastor?.photoUrl ? (
                 <Image
                   src={pastor.photoUrl}
                   alt={pastor.name}
@@ -30,19 +28,22 @@ export default function PastorsWelcomeClient({ pastor }) {
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-white/30 font-black text-4xl">
-                  {pastor.name?.charAt(0) || "P"}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30">
+                  <span className="font-black text-6xl">
+                    {pastor?.name?.charAt(0) || "DC"}
+                  </span>
+                  <span className="mt-2 text-sm text-white/20">Pastor Photo</span>
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <p className="text-primary text-xs font-black tracking-[0.25em] uppercase">
-                  Senior Pastor
+                  {pastor ? "Lead Pastor" : "Our Church"}
                 </p>
                 <h3 className="text-white text-xl font-black mt-1">
-                  {pastor.name}
+                  {pastor?.name || "Deliverance Church Utawala"}
                 </h3>
-                {pastor.roleTitle && (
+                {pastor?.roleTitle && (
                   <p className="text-white/70 text-sm mt-1">
                     {pastor.roleTitle}
                   </p>

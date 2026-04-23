@@ -112,3 +112,19 @@ model SiteSettings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String?
+  imageUrl    String
+  altText     String?
+  caption    String?
+  category   String?  // e.g., "services", "events", "youth", "outreach"
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+}
