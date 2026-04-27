@@ -1,8 +1,24 @@
-import { getPastors } from "@/lib/pastors.server";
+"use client";
 
-export default async function PastorsSection() {
-  const pastors = await getPastors({ limit: 8 });
-  if (!pastors || !pastors.length) return null;
+import { useQuery } from "@tanstack/react-query";
+
+async function fetchPastors(limit) {
+  const res = await fetch(`/api/pastors?limit=${encodeURIComponent(String(limit))}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to load pastors");
+  return res.json();
+}
+
+export default function PastorsSection() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["pastors", { limit: 8 }],
+    queryFn: () => fetchPastors(8),
+  });
+
+  const pastors = Array.isArray(data?.items) ? data.items : [];
+  if (isError) return null;
+  if (!isLoading && !pastors.length) return null;
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-7 sm:p-10">
@@ -15,7 +31,14 @@ export default async function PastorsSection() {
       </p>
 
       <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {pastors.map((p) => (
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="rounded-3xl bg-background/60 border border-white/10 overflow-hidden animate-pulse h-[340px]"
+              />
+            ))
+          : pastors.map((p) => (
           <div
             key={p.slug}
             className="rounded-3xl bg-background/60 border border-white/10 overflow-hidden"

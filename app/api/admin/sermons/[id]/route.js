@@ -54,7 +54,8 @@ export async function PUT(request, { params }) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const id = String(params?.id || "");
+  const awaitedParams = await params;
+  const id = String(awaitedParams?.id || "");
   const json = await request.json().catch(() => null);
   const parsed = SermonUpdateSchema.safeParse(json);
   if (!parsed.success) {
@@ -109,11 +110,33 @@ export async function PUT(request, { params }) {
   }
 }
 
+export async function GET(request, { params }) {
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const awaitedParams = await params;
+  const id = String(awaitedParams?.id || "");
+  try {
+    const item = await prisma.sermon.findUnique({
+      where: { id },
+      include: { category: true },
+    });
+    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ ok: true, item });
+  } catch (e) {
+    return NextResponse.json(
+      { ok: false, error: e?.message || "Database error" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function DELETE(request, { params }) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const id = String(params?.id || "");
+  const awaitedParams = await params;
+  const id = String(awaitedParams?.id || "");
   try {
     await prisma.sermon.delete({ where: { id } });
     return NextResponse.json({ ok: true });

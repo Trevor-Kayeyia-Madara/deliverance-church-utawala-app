@@ -23,32 +23,47 @@ function isValidUrl(value) {
 
 const UrlOrPath = z
   .string()
-  .max(500)
+  .max(2048)
   .optional()
   .or(z.literal(""))
   .refine((v) => v === "" || v.startsWith("/") || isValidUrl(v), {
     message: "Invalid URL",
   });
 
-const PastorUpdateSchema = z.object({
-  name: z.string().min(2).max(120),
-  roleTitle: z.string().max(120).optional().or(z.literal("")),
-  bio: z.string().max(5000).optional().or(z.literal("")),
-  photoUrl: UrlOrPath,
+const MinistrySchema = z.object({
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional().or(z.literal("")),
+  highlights: z.array(z.string().min(1).max(80)).max(20).optional(),
+  imageUrl: UrlOrPath,
   sortOrder: z.number().int().min(0).max(10_000).optional(),
   isPublished: z.boolean().optional(),
+  slug: z.string().max(191).optional().or(z.literal("")),
 });
 
-export async function GET(request, { params }) {
+function normalizeMinistry(m) {
+  return {
+    id: m.id,
+    slug: m.slug,
+    title: m.title,
+    description: m.description || null,
+    highlights: Array.isArray(m.highlights) ? m.highlights : [],
+    imageUrl: m.imageUrl || null,
+    sortOrder: m.sortOrder ?? 0,
+    isPublished: !!m.isPublished,
+    createdAt: m.createdAt?.toISOString?.() || m.createdAt,
+    updatedAt: m.updatedAt?.toISOString?.() || m.updatedAt,
+  };
+}
+
+export async function GET() {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const awaitedParams = await params;
-  const id = String(awaitedParams?.id || "");
   try {
-    const item = await prisma.pastor.findUnique({ where: { id } });
-    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json({ ok: true, item });
+    const items = await prisma.ministry.findMany({
+      orderBy: [{ sortOrder: "asc" }, { title: "asc" }],
+    });
+    return NextResponse.json({ ok: true, items: items.map(normalizeMinistry) });
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: e?.message || "Database error" },
@@ -57,14 +72,12 @@ export async function GET(request, { params }) {
   }
 }
 
-export async function PUT(request, { params }) {
+export async function POST(request) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const awaitedParams = await params;
-  const id = String(awaitedParams?.id || "");
   const json = await request.json().catch(() => null);
-  const parsed = PastorUpdateSchema.safeParse(json);
+  const parsed = MinistrySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid payload", details: parsed.error.flatten() },
@@ -73,22 +86,24 @@ export async function PUT(request, { params }) {
   }
 
   const data = parsed.data;
-  const slug = slugify(data.name) || `pastor-${Date.now()}`;
+  const slug = data.slug ? slugify(data.slug) : slugify(data.title);
+  if (!slug) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
 
   try {
-    const updated = await prisma.pastor.update({
-      where: { id },
+    const created = await prisma.ministry.create({
       data: {
         slug,
-        name: data.name,
-        roleTitle: data.roleTitle || null,
-        bio: data.bio || null,
-        photoUrl: data.photoUrl || null,
+        title: data.title,
+        description: data.description || null,
+        highlights: data.highlights || [],
+        imageUrl: data.imageUrl || null,
         sortOrder: data.sortOrder ?? 0,
         isPublished: data.isPublished ?? true,
       },
     });
-    return NextResponse.json({ ok: true, item: updated });
+    return NextResponse.json({ ok: true, item: normalizeMinistry(created) });
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: e?.message || "Database error" },
@@ -97,19 +112,3 @@ export async function PUT(request, { params }) {
   }
 }
 
-export async function DELETE(request, { params }) {
-  const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const awaitedParams = await params;
-  const id = String(awaitedParams?.id || "");
-  try {
-    await prisma.pastor.delete({ where: { id } });
-    return NextResponse.json({ ok: true });
-  } catch (e) {
-    return NextResponse.json(
-      { ok: false, error: e?.message || "Database error" },
-      { status: 500 },
-    );
-  }
-}

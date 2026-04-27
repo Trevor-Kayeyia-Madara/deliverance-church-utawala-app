@@ -1,11 +1,7 @@
-"use client";
-
 import { Clock } from "lucide-react";
-import { useSite } from "@/lib/siteContext";
 
-export default function ServiceTimesCard() {
-  const site = useSite();
-  const { serviceTimes = [], microChurches = [], sundaySchool } = site;
+export default function ServiceTimesCard({ site }) {
+  const { serviceTimes = [], microChurches = [], sundaySchool } = site || {};
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-7">
       <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">

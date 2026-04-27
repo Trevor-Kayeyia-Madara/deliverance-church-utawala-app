@@ -1,5 +1,20 @@
+"use client";
+
 import Link from "next/link";
-import { getUpcomingEvents } from "@/lib/events.server";
+import { useQuery } from "@tanstack/react-query";
+
+async function fetchEvents(limit) {
+  const res = await fetch(
+    `/api/events?limit=${encodeURIComponent(String(limit))}&upcoming=true`,
+    {
+      cache: "no-store",
+    },
+  );
+  if (!res.ok) throw new Error("Failed to load events");
+  const json = await res.json();
+  if (!json?.ok) throw new Error(json?.error || "Failed to load events");
+  return json;
+}
 
 function formatEventMeta(date) {
   try {
@@ -13,26 +28,21 @@ function formatEventMeta(date) {
       hour12: true,
       timeZone: "Africa/Nairobi",
     }).format(date);
-    return `${day} â€¢ ${time}`;
+    return `${day} \u2022 ${time}`;
   } catch {
     return date.toISOString();
   }
 }
 
-export default async function EventsSection() {
-  const events = await getUpcomingEvents({ limit: 3 });
-  const list =
-    events && events.length
-      ? events.map((e) => ({
-          title: e.title,
-          meta: formatEventMeta(e.startAt),
-          posterUrl: e.posterUrl || null,
-        }))
-      : [
-          { title: "Sunday Service", meta: "Sun â€¢ 10:00 AM" },
-          { title: "Midweek Service", meta: "Wed â€¢ 6:00 PM" },
-          { title: "Prayer & Worship", meta: "Fri â€¢ 6:00 PM" },
-        ];
+export default function EventsSection() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["events", { limit: 3 }],
+    queryFn: () => fetchEvents(3),
+    staleTime: 30_000,
+    retry: 1,
+  });
+
+  const events = Array.isArray(data?.items) ? data.items : [];
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-7 sm:p-10">
@@ -42,10 +52,10 @@ export default async function EventsSection() {
             Events
           </p>
           <h2 className="mt-3 text-3xl sm:text-4xl font-black">
-            Whats happening this week.
+            What&apos;s happening this week.
           </h2>
           <p className="mt-3 text-white/75 max-w-2xl">
-            From worship nights to discipleship classes â€” thereâ€™s a place for
+            From worship nights to discipleship classes — there&apos;s a place for
             you.
           </p>
         </div>
@@ -58,29 +68,55 @@ export default async function EventsSection() {
       </div>
 
       <div className="mt-7 grid grid-cols-1 md:grid-cols-3 gap-4">
-        {list.map((e) => (
-          <div
-            key={e.title}
-            className="rounded-3xl bg-background/60 border border-white/10 p-6"
-          >
-            {e.posterUrl ? (
-              <div className="mb-4 overflow-hidden rounded-2xl border border-white/10 bg-background/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  alt={e.title}
-                  src={e.posterUrl}
-                  className="h-32 w-full object-cover"
-                  loading="lazy"
-                />
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={`skeleton-${i}`}
+                className="rounded-3xl bg-background/60 border border-white/10 p-6 animate-pulse"
+              >
+                <div className="h-32 rounded-2xl border border-white/10 bg-white/5" />
+                <div className="mt-5 h-3 w-20 rounded bg-white/10" />
+                <div className="mt-4 h-5 w-3/4 rounded bg-white/10" />
+                <div className="mt-3 h-4 w-1/2 rounded bg-white/10" />
               </div>
-            ) : null}
-            <p className="text-primary text-xs font-black tracking-[0.25em] uppercase">
-              Upcoming
+            ))
+          : null}
+
+        {!isLoading && !isError && events.length
+          ? events.map((e) => (
+              <div
+                key={e.id || e.slug || e.title}
+                className="rounded-3xl bg-background/60 border border-white/10 p-6"
+              >
+                {e.posterUrl ? (
+                  <div className="mb-4 overflow-hidden rounded-2xl border border-white/10 bg-background/40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      alt={e.title}
+                      src={e.posterUrl}
+                      className="h-32 w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : null}
+                <p className="text-primary text-xs font-black tracking-[0.25em] uppercase">
+                  Upcoming
+                </p>
+                <h3 className="mt-3 text-xl font-black">{e.title}</h3>
+                <p className="mt-2 text-white/70 font-bold text-sm">
+                  {formatEventMeta(new Date(e.startAt))}
+                </p>
+              </div>
+            ))
+          : null}
+
+        {!isLoading && (isError || !events.length) ? (
+          <div className="md:col-span-3 rounded-3xl bg-background/60 border border-white/10 p-6">
+            <p className="text-white/70 font-bold">
+              No upcoming events right now. Please check back soon.
             </p>
-            <h3 className="mt-3 text-xl font-black">{e.title}</h3>
-            <p className="mt-2 text-white/70 font-bold text-sm">{e.meta}</p>
           </div>
-        ))}
+        ) : null}
       </div>
     </div>
   );

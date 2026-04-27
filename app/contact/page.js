@@ -1,6 +1,5 @@
 import SectionWrapper from "@/components/SectionWrapper";
 import ContactForm from "@/components/ContactForm";
-import DonationCard from "@/components/DonationCard";
 import ServiceTimesCard from "@/components/ServiceTimesCard";
 import { Suspense } from "react";
 import { getSiteSettings } from "@/lib/siteSettings.server";
@@ -93,8 +92,7 @@ export default async function ContactPage() {
           </div>
 
           <div className="lg:col-span-5 flex flex-col gap-6">
-            <DonationCard />
-            <ServiceTimesCard />
+            <ServiceTimesCard site={site} />
           </div>
         </div>
       </SectionWrapper>

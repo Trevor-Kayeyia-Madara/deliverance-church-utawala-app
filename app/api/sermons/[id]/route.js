@@ -22,7 +22,8 @@ function normalizeSermon(s) {
 }
 
 export async function GET(_request, { params }) {
-  const id = params?.id;
+  const awaitedParams = await params;
+  const id = awaitedParams?.id;
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 
   if (hasYouTubeRuntimeSource()) {

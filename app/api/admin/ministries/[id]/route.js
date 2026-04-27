@@ -11,13 +11,6 @@ function slugify(value) {
     .replace(/(^-|-$)/g, "");
 }
 
-function eventSlug({ title, startAt }) {
-  const d = startAt instanceof Date ? startAt : new Date(startAt);
-  const date = Number.isFinite(d.getTime()) ? d.toISOString().slice(0, 10) : "event";
-  const base = slugify(title) || "event";
-  return `${base}-${date}`;
-}
-
 function isValidUrl(value) {
   try {
     // eslint-disable-next-line no-new
@@ -37,15 +30,30 @@ const UrlOrPath = z
     message: "Invalid URL",
   });
 
-const EventUpdateSchema = z.object({
-  title: z.string().min(2).max(160),
-  description: z.string().max(4000).optional().or(z.literal("")),
-  location: z.string().max(200).optional().or(z.literal("")),
-  posterUrl: UrlOrPath,
-  startAt: z.string().datetime(),
-  endAt: z.string().datetime().optional().or(z.literal("")),
+const MinistryUpdateSchema = z.object({
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional().or(z.literal("")),
+  highlights: z.array(z.string().min(1).max(80)).max(20).optional(),
+  imageUrl: UrlOrPath,
+  sortOrder: z.number().int().min(0).max(10_000).optional(),
   isPublished: z.boolean().optional(),
+  slug: z.string().max(191).optional().or(z.literal("")),
 });
+
+function normalizeMinistry(m) {
+  return {
+    id: m.id,
+    slug: m.slug,
+    title: m.title,
+    description: m.description || null,
+    highlights: Array.isArray(m.highlights) ? m.highlights : [],
+    imageUrl: m.imageUrl || null,
+    sortOrder: m.sortOrder ?? 0,
+    isPublished: !!m.isPublished,
+    createdAt: m.createdAt?.toISOString?.() || m.createdAt,
+    updatedAt: m.updatedAt?.toISOString?.() || m.updatedAt,
+  };
+}
 
 export async function GET(request, { params }) {
   const session = await getAdminSession();
@@ -54,9 +62,9 @@ export async function GET(request, { params }) {
   const awaitedParams = await params;
   const id = String(awaitedParams?.id || "");
   try {
-    const item = await prisma.event.findUnique({ where: { id } });
+    const item = await prisma.ministry.findUnique({ where: { id } });
     if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json({ ok: true, item });
+    return NextResponse.json({ ok: true, item: normalizeMinistry(item) });
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: e?.message || "Database error" },
@@ -72,7 +80,7 @@ export async function PUT(request, { params }) {
   const awaitedParams = await params;
   const id = String(awaitedParams?.id || "");
   const json = await request.json().catch(() => null);
-  const parsed = EventUpdateSchema.safeParse(json);
+  const parsed = MinistryUpdateSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid payload", details: parsed.error.flatten() },
@@ -81,25 +89,25 @@ export async function PUT(request, { params }) {
   }
 
   const data = parsed.data;
-  const startAt = new Date(data.startAt);
-  const endAt = data.endAt ? new Date(data.endAt) : null;
-  const slug = eventSlug({ title: data.title, startAt });
+  const slug = data.slug ? slugify(data.slug) : slugify(data.title);
+  if (!slug) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
 
   try {
-    const updated = await prisma.event.update({
+    const updated = await prisma.ministry.update({
       where: { id },
       data: {
         slug,
         title: data.title,
         description: data.description || null,
-        location: data.location || null,
-        posterUrl: data.posterUrl || null,
-        startAt,
-        endAt,
+        highlights: data.highlights || [],
+        imageUrl: data.imageUrl || null,
+        sortOrder: data.sortOrder ?? 0,
         isPublished: data.isPublished ?? true,
       },
     });
-    return NextResponse.json({ ok: true, item: updated });
+    return NextResponse.json({ ok: true, item: normalizeMinistry(updated) });
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: e?.message || "Database error" },
@@ -115,7 +123,7 @@ export async function DELETE(request, { params }) {
   const awaitedParams = await params;
   const id = String(awaitedParams?.id || "");
   try {
-    await prisma.event.delete({ where: { id } });
+    await prisma.ministry.delete({ where: { id } });
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json(

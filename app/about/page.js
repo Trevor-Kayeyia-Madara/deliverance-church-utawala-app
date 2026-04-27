@@ -1,6 +1,6 @@
 import Link from "next/link";
 import SectionWrapper from "@/components/SectionWrapper";
-import { getPastors } from "@/lib/pastors.server";
+import AboutLeadershipTeaser from "@/components/AboutLeadershipTeaser";
 
 export const metadata = {
   title: "About Us - Deliverance Church Utawala",
@@ -8,8 +8,6 @@ export const metadata = {
 };
 
 export default async function AboutPage() {
-  const pastors = await getPastors({ limit: 6 });
-
   return (
     <div className="min-h-screen">
       <section className="relative overflow-hidden py-20 sm:py-28">
@@ -95,25 +93,7 @@ export default async function AboutPage() {
         </div>
       </SectionWrapper>
 
-      {pastors && pastors.length > 0 && (
-        <SectionWrapper className="py-12 sm:py-16">
-          <div className="text-center">
-            <p className="text-accent/90 text-xs font-black tracking-[0.25em] uppercase">
-              Meet Our Team
-            </p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Leadership</h2>
-            <p className="mt-3 text-white/75 max-w-xl mx-auto">
-              Our pastoral team is committed to guiding you in your faith journey.
-            </p>
-            <Link
-              href="/about/leadership"
-              className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-6 py-3 hover:bg-accent transition-colors"
-            >
-              View Full Leadership
-            </Link>
-          </div>
-        </SectionWrapper>
-      )}
+      <AboutLeadershipTeaser />
     </div>
   );
 }

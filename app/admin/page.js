@@ -20,6 +20,9 @@ export default function AdminHomePage() {
           { href: "/admin/sermons", title: "Sermons", desc: "Edit sermon listings" },
           { href: "/admin/events", title: "Events", desc: "Homepage events" },
           { href: "/admin/pastors", title: "Pastors", desc: "Leadership cards" },
+          { href: "/admin/gallery", title: "Gallery", desc: "Photos & captions" },
+          { href: "/admin/ministries", title: "Ministries", desc: "Public ministry listings" },
+          { href: "/admin/messages", title: "Messages", desc: "Contact form inbox" },
           { href: "/admin/settings", title: "Settings", desc: "Contact + social + live" },
           { href: "/admin/youtube", title: "YouTube Sync", desc: "Import sermons" },
         ].map((c) => (

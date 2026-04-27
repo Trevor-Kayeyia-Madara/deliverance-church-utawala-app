@@ -1,57 +1,22 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import prisma from "@/lib/db";
-import { MOCK_SERMONS } from "@/lib/mockData";
 import { formatDate, formatDuration } from "@/lib/format";
-import { getYouTubeSermonById, hasYouTubeRuntimeSource } from "@/lib/sermonsData";
 import { toYouTubeEmbedUrl } from "@/lib/youtube";
+import { getRequestOrigin } from "@/lib/origin.server";
 
 async function getSermon(id) {
-  if (hasYouTubeRuntimeSource()) {
-    try {
-      const youtubeSermon = await getYouTubeSermonById(id);
-      if (youtubeSermon) return youtubeSermon;
-    } catch {
-      // Fall through to DB/mock data.
-    }
-  }
+  const origin = getRequestOrigin();
+  const res = await fetch(`${origin}/api/sermons/${encodeURIComponent(id)}`, {
+    cache: "no-store",
+  }).catch(() => null);
 
-  try {
-    const sermon =
-      (await prisma.sermon.findUnique({
-        where: { id },
-        include: { category: true },
-      })) ||
-      (await prisma.sermon.findUnique({
-        where: { slug: id },
-        include: { category: true },
-      }));
+  if (!res) return null;
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
 
-    if (!sermon) return null;
-
-    return {
-      id: sermon.id,
-      slug: sermon.slug,
-      title: sermon.title,
-      description: sermon.description || null,
-      speaker: sermon.speaker || null,
-      date: sermon.date.toISOString(),
-      durationMinutes: sermon.durationMinutes ?? null,
-      thumbnailUrl: sermon.thumbnailUrl || null,
-      videoUrl: sermon.videoUrl || null,
-      category: sermon.category
-        ? {
-            id: sermon.category.id,
-            name: sermon.category.name,
-            slug: sermon.category.slug,
-          }
-        : null,
-      source: "db",
-    };
-  } catch {
-    const fallback = MOCK_SERMONS.find((item) => item.id === id || item.slug === id);
-    return fallback || null;
-  }
+  const data = await res.json().catch(() => null);
+  if (!data) return null;
+  return data;
 }
 
 export async function generateMetadata({ params }) {

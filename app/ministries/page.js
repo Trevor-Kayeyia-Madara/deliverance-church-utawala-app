@@ -1,7 +1,6 @@
 import Link from "next/link";
 import SectionWrapper from "@/components/SectionWrapper";
-import MinistryCard from "@/components/MinistryCard";
-import { MINISTRIES } from "@/lib/ministries";
+import MinistriesClient from "@/components/MinistriesClient";
 
 export const metadata = {
   title: "Ministries | Deliverance Church Utawala",
@@ -35,11 +34,7 @@ export default function MinistriesPage() {
       </div>
 
       <SectionWrapper className="py-10 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {MINISTRIES.map((m) => (
-            <MinistryCard key={m.slug} ministry={m} />
-          ))}
-        </div>
+        <MinistriesClient />
       </SectionWrapper>
 
       <SectionWrapper className="py-10 sm:py-12">
@@ -67,4 +62,3 @@ export default function MinistriesPage() {
     </div>
   );
 }
-

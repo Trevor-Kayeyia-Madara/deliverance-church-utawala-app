@@ -5,9 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
+    "prebuild": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
     "build": "next build",
+    "build:cpanel": "npm run build && node scripts/prepare-standalone.js",
     "start": "next start",
+    "start:cpanel": "node server.js",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed"
@@ -17,7 +21,7 @@
     "@tanstack/react-query": "^5.83.0",
     "framer-motion": "^12.37.0",
     "lucide-react": "^0.577.0",
-    "next": "^15.2.0",
+    "next": "^15.5.15",
     "next-auth": "^5.0.0-beta.29",
     "prisma": "^5.18.0",
     "react": "^18.2.0",

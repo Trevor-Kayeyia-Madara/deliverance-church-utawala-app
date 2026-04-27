@@ -38,7 +38,7 @@ async function main() {
     addressLine2: "Utawala Road",
     phoneDisplay: "+254 700 000 000",
     phoneTel: "+254700000000",
-    email: "info@deliveranceutawala.org",
+    email: "info@dcutawala.org",
     youtubeUrl: "https://www.youtube.com",
     facebookUrl: "https://www.facebook.com",
     instagramUrl: "https://www.instagram.com",
@@ -213,6 +213,82 @@ async function main() {
       update: { ...pastor, slug },
       create: { ...pastor, slug },
     });
+  }
+
+  const ministries = [
+    {
+      slug: "worship",
+      title: "Worship Ministry",
+      description: "Serve God with your gifts through worship and excellence.",
+      highlights: ["Choir", "Band", "Media support"],
+      sortOrder: 1,
+      isPublished: true,
+    },
+    {
+      slug: "house-of-prophets",
+      title: "House of Prophets",
+      description: "A discipleship space for spiritual growth and direction.",
+      highlights: ["Teaching", "Mentorship", "Prayer"],
+      sortOrder: 2,
+      isPublished: true,
+    },
+    {
+      slug: "daughters-of-faith",
+      title: "Daughters of Faith",
+      description: "Womenâ€™s fellowship for connection and strengthening.",
+      highlights: ["Bible study", "Community", "Support"],
+      sortOrder: 3,
+      isPublished: true,
+    },
+    {
+      slug: "young-adults",
+      title: "Young Adults",
+      description: "A community for young people to grow and serve together.",
+      highlights: ["Fellowship", "Purpose", "Discipleship"],
+      sortOrder: 4,
+      isPublished: true,
+    },
+    {
+      slug: "sunday-school",
+      title: "Sunday School",
+      description: "A safe, joyful space for children to grow in faith.",
+      highlights: ["Bible stories", "Worship", "Care & safety"],
+      sortOrder: 5,
+      isPublished: true,
+    },
+    {
+      slug: "media-team",
+      title: "Media Team",
+      description: "Serve behind the scenes to support worship and outreach.",
+      highlights: ["Sound", "Video", "Design"],
+      sortOrder: 6,
+      isPublished: true,
+    },
+  ];
+
+  try {
+    for (const ministry of ministries) {
+      await prisma.ministry.upsert({
+        where: { slug: ministry.slug },
+        update: {
+          title: ministry.title,
+          description: ministry.description,
+          highlights: ministry.highlights,
+          sortOrder: ministry.sortOrder,
+          isPublished: ministry.isPublished,
+        },
+        create: {
+          slug: ministry.slug,
+          title: ministry.title,
+          description: ministry.description,
+          highlights: ministry.highlights,
+          sortOrder: ministry.sortOrder,
+          isPublished: ministry.isPublished,
+        },
+      });
+    }
+  } catch (err) {
+    console.warn("Skipping ministries seed:", err?.message || err);
   }
 
   console.log("Seed complete.");

@@ -2,7 +2,6 @@ import HeroSection from "@/components/HeroSection";
 import PastorsWelcomeSection from "@/components/PastorsWelcomeSection";
 import SectionWrapper from "@/components/SectionWrapper";
 import LiveTVCard from "@/components/LiveTVCard";
-import DonationCard from "@/components/DonationCard";
 import SermonsPreview from "@/components/SermonsPreview";
 import QuickActions from "@/components/QuickActions";
 import Link from "next/link";
@@ -190,7 +189,6 @@ export default function HomePage() {
           </div>
           <div className="lg:col-span-5 flex flex-col gap-6">
             <LiveTVCard />
-            <DonationCard />
           </div>
         </div>
       </SectionWrapper>

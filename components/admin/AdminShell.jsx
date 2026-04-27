@@ -9,6 +9,8 @@ const nav = [
   { href: "/admin/events", label: "Events" },
   { href: "/admin/pastors", label: "Pastors" },
   { href: "/admin/gallery", label: "Gallery" },
+  { href: "/admin/ministries", label: "Ministries" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/settings", label: "Settings" },
   { href: "/admin/youtube", label: "YouTube Sync" },
 ];
