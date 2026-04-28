@@ -11,7 +11,7 @@
     "start": "next start",
     "start:cpanel": "node server.js",
     "lint": "next lint",
-    "postinstall": "node \"$INIT_CWD/scripts/prisma-postinstall.js\"",
+    "postinstall": "node -e \"require(require('path').resolve(process.env.INIT_CWD||process.cwd(),'scripts','prisma-postinstall.js'))\"",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed"

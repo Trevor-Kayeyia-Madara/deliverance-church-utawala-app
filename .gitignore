@@ -10,6 +10,7 @@ lerna-debug.log*
 design/reference/
 visily-multiscreens.pdf
 .env.example
+package-lock.json
 
 node_modules
 dist

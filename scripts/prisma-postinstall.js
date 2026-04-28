@@ -19,8 +19,11 @@ function pickSchemaPath() {
 }
 
 function main() {
+  if (process.env.PRISMA_SKIP_POSTINSTALL === "1") process.exit(0);
+
   const projectRoot = getProjectRoot();
   const schemaPath = pickSchemaPath();
+  const schemaPathForCli = path.relative(projectRoot, schemaPath);
 
   if (!fs.existsSync(schemaPath)) {
     // eslint-disable-next-line no-console
@@ -28,16 +31,37 @@ function main() {
       `Prisma schema not found at "${schemaPath}". ` +
         "Set PRISMA_SCHEMA_PATH to the absolute schema path on your server.",
     );
-    process.exit(1);
+    process.exit(process.env.PRISMA_POSTINSTALL_STRICT === "1" ? 1 : 0);
   }
 
-  const result = spawnSync(
-    process.platform === "win32" ? "npx.cmd" : "npx",
-    ["prisma", "generate", "--schema", schemaPath],
-    { stdio: "inherit", cwd: projectRoot },
-  );
+  const result =
+    process.platform === "win32"
+      ? spawnSync(
+          "cmd.exe",
+          ["/d", "/s", "/c", `npx prisma generate --schema ${schemaPathForCli}`],
+          { stdio: "inherit", cwd: projectRoot },
+        )
+      : spawnSync(
+          "npx",
+          ["prisma", "generate", "--schema", schemaPathForCli],
+          { stdio: "inherit", cwd: projectRoot },
+        );
 
-  process.exit(result.status ?? 1);
+  if (result.error) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to run Prisma generate: ${result.error.message}`);
+  }
+
+  if ((result.status ?? 1) !== 0) {
+    // eslint-disable-next-line no-console
+    console.error(
+      "Prisma generate failed during postinstall. " +
+        "Continuing install; run `npm run prisma:generate` after resolving the issue.",
+    );
+    process.exit(process.env.PRISMA_POSTINSTALL_STRICT === "1" ? 1 : 0);
+  }
+
+  process.exit(0);
 }
 
 main();
