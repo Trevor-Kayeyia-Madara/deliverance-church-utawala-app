@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { SiteProvider } from "@/lib/siteContext";
+import { RouteLoadingProvider } from "@/lib/routeLoadingContext";
+import RouteLoadingOverlay from "@/components/RouteLoadingOverlay";
 
 export default function Providers({ children, site }) {
   const [client] = useState(
@@ -19,7 +21,12 @@ export default function Providers({ children, site }) {
 
   return (
     <QueryClientProvider client={client}>
-      <SiteProvider value={site}>{children}</SiteProvider>
+      <RouteLoadingProvider>
+        <SiteProvider value={site}>
+          <RouteLoadingOverlay />
+          {children}
+        </SiteProvider>
+      </RouteLoadingProvider>
     </QueryClientProvider>
   );
 }

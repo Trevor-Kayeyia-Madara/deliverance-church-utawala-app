@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useSite } from "@/lib/siteContext";
+import AppLink from "@/components/AppLink";
 
 const links = [
   { href: "/", label: "Home" },
@@ -26,19 +26,20 @@ export default function Navbar() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const site = useSite();
   const siteName = site?.name || "Deliverance Church Utawala";
+  const logoUrl = site?.logoUrl || "/logo.png";
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/85 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
-          <Link
+          <AppLink
             href="/"
             className="flex items-center gap-3 font-black tracking-tight"
             onClick={() => setOpen(false)}
           >
             <span className="relative size-9 overflow-hidden rounded-xl border border-white/10 bg-white/5">
               <Image
-                src="/logo.png"
+                src={logoUrl}
                 alt={`${siteName} logo`}
                 fill
                 sizes="36px"
@@ -50,7 +51,7 @@ export default function Navbar() {
               {siteName.split(" Utawala")[0]}{" "}
               <span className="text-accent">Utawala</span>
             </span>
-          </Link>
+          </AppLink>
 
           <nav className="hidden md:flex items-center gap-1">
             {links.map((l) => {
@@ -75,14 +76,14 @@ export default function Navbar() {
                     {aboutOpen && (
                       <div className="absolute top-full left-0 mt-1 w-48 rounded-xl border border-white/10 bg-background/95 backdrop-blur shadow-lg overflow-hidden">
                         {l.children.map((child) => (
-                          <Link
+                          <AppLink
                             key={child.href}
                             href={child.href}
                             onClick={() => setAboutOpen(false)}
                             className="block px-4 py-3 font-bold text-white/75 hover:text-white hover:bg-white/5 transition-colors"
                           >
                             {child.label}
-                          </Link>
+                          </AppLink>
                         ))}
                       </div>
                     )}
@@ -90,7 +91,7 @@ export default function Navbar() {
                 );
               }
               return (
-                <Link
+                <AppLink
                   key={l.href}
                   href={l.href}
                   className={[
@@ -101,15 +102,15 @@ export default function Navbar() {
                   ].join(" ")}
                 >
                   {l.label}
-                </Link>
+                </AppLink>
               );
             })}
-            <Link
+            <AppLink
               href="/contact#give"
               className="ml-2 inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-5 py-2.5 hover:bg-accent transition-colors"
             >
               Give
-            </Link>
+            </AppLink>
           </nav>
 
           <button
@@ -128,7 +129,7 @@ export default function Navbar() {
             {links.map((l) => {
               const active = pathname === l.href;
               return (
-                <Link
+                <AppLink
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
@@ -140,16 +141,16 @@ export default function Navbar() {
                   ].join(" ")}
                 >
                   {l.label}
-                </Link>
+                </AppLink>
               );
             })}
-            <Link
+            <AppLink
               href="/contact#give"
               onClick={() => setOpen(false)}
               className="mt-1 inline-flex items-center justify-center rounded-xl bg-primary text-black font-extrabold px-5 py-3 hover:bg-accent transition-colors"
             >
               Give
-            </Link>
+            </AppLink>
           </div>
         </div>
       ) : null}

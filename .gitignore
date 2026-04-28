@@ -16,6 +16,11 @@ dist
 dist-ssr
 *.local
 
+.zip
+auth.zip
+
+CPANEL.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,35 +1,65 @@
-import Link from "next/link";
+"use client";
+
 import Image from "next/image";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Youtube, Facebook, Instagram, Music2, Link2 } from "lucide-react";
+import { useSite } from "@/lib/siteContext";
+import AppLink from "@/components/AppLink";
+
+const socialItems = [
+  { key: "youtube", label: "YouTube", Icon: Youtube },
+  { key: "facebook", label: "Facebook", Icon: Facebook },
+  { key: "instagram", label: "Instagram", Icon: Instagram },
+  { key: "tiktok", label: "TikTok", Icon: Music2 },
+  { key: "linktree", label: "Linktree", Icon: Link2 },
+];
 
 export default function Footer() {
+  const site = useSite();
+  const siteName = site?.name || "Deliverance Church Utawala";
+  const logoUrl = site?.logoUrl || "/logo.png";
+
   return (
     <footer className="border-t border-white/10 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-4">
-            <Link
-              href="/"
-              className="flex items-center gap-3 font-black tracking-tight"
-            >
+            <AppLink href="/" className="flex items-center gap-3 font-black tracking-tight">
               <span className="relative size-10 overflow-hidden rounded-xl border border-white/10 bg-white/5">
                 <Image
-                  src="/logo.png"
-                  alt="Deliverance Church Utawala logo"
+                  src={logoUrl}
+                  alt={`${siteName} logo`}
                   fill
                   sizes="40px"
                   className="object-contain p-1"
                 />
               </span>
               <span className="leading-tight">
-                <span className="block">Deliverance Church</span>
-                <span className="block text-accent">Utawala</span>
+                <span className="block">{siteName.split(" Utawala")[0] || "Deliverance Church"}</span>
+                <span className="block text-accent">{siteName.includes("Utawala") ? "Utawala" : site.shortName}</span>
               </span>
-            </Link>
+            </AppLink>
             <p className="mt-4 text-white/70 max-w-md leading-relaxed">
-              The Apostolic Church Of Choice transforming &amp; empowering
-              mankind in Africa and beyond.
+              {site?.tagline || "The Church of Choice"}
             </p>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {socialItems.map(({ key, label, Icon }) => {
+                const href = site?.social?.[key];
+                if (!href) return null;
+                return (
+                  <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 font-extrabold text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                  >
+                    <Icon className="size-4 text-accent" aria-hidden="true" />
+                    <span className="text-sm">{label}</span>
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
           <div className="lg:col-span-2">
@@ -37,33 +67,27 @@ export default function Footer() {
               Quick Links
             </p>
             <div className="mt-4 flex flex-col gap-2">
-              <Link className="text-white/75 hover:text-white" href="/">
+              <AppLink className="text-white/75 hover:text-white" href="/">
                 Home
-              </Link>
-              <Link className="text-white/75 hover:text-white" href="/about">
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/about">
                 About Us
-              </Link>
-              <Link className="text-white/75 hover:text-white" href="/sermons">
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/sermons">
                 Sermons
-              </Link>
-              <Link
-                className="text-white/75 hover:text-white"
-                href="/about/leadership"
-              >
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/about/leadership">
                 Leadership
-              </Link>
-              <Link
-                className="text-white/75 hover:text-white"
-                href="/ministries"
-              >
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/ministries">
                 Departments
-              </Link>
-              <Link className="text-white/75 hover:text-white" href="/school">
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/school">
                 Dominion Center
-              </Link>
-              <Link className="text-white/75 hover:text-white" href="/contact#give">
+              </AppLink>
+              <AppLink className="text-white/75 hover:text-white" href="/contact#give">
                 Giving
-              </Link>
+              </AppLink>
             </div>
           </div>
 
@@ -72,32 +96,14 @@ export default function Footer() {
               Service Times
             </p>
             <div className="mt-4 space-y-3 text-sm">
-              <div>
-                <p className="font-extrabold text-white/85">
-                  Sunday First Service
-                </p>
-                <p className="text-white/70 font-bold">6:30 AM &amp; 9:00 AM</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-white/85">
-                  Sunday Second Service
-                </p>
-                <p className="text-white/70 font-bold">9:30 AM &amp; 12:00 PM</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-white/85">Tuesday Fellowship</p>
-                <p className="text-white/70 font-bold">6:30 PM</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-white/85">
-                  Wednesday Anchored Service
-                </p>
-                <p className="text-white/70 font-bold">6:30 PM - 8:00 PM</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-white/85">Friday Ignite Service</p>
-                <p className="text-white/70 font-bold">6:30 PM - 8:00 PM</p>
-              </div>
+              {(site?.serviceTimes || []).map((t, idx) => (
+                <div key={`${t.day}-${t.label}-${idx}`}>
+                  <p className="font-extrabold text-white/85">
+                    {t.day} {t.label}
+                  </p>
+                  <p className="text-white/70 font-bold">{t.time}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -111,9 +117,9 @@ export default function Footer() {
                 <div>
                   <p className="font-extrabold text-white/85">Address</p>
                   <p className="text-white/70 font-bold">
-                    300m from ACK St. Monica,
-                    <br />
-                    Utawala, Nairobi
+                    {site?.contact?.addressLine2 || ""}
+                    {site?.contact?.addressLine2 ? <br /> : null}
+                    {site?.contact?.addressLine1 || site?.location}
                   </p>
                 </div>
               </div>
@@ -124,9 +130,9 @@ export default function Footer() {
                   <p className="font-extrabold text-white/85">Phone</p>
                   <a
                     className="text-white/70 font-bold hover:text-white"
-                    href="tel:+254755637745"
+                    href={`tel:${site?.contact?.phoneTel || ""}`}
                   >
-                    +254 755 637 745
+                    {site?.contact?.phoneDisplay || ""}
                   </a>
                 </div>
               </div>
@@ -135,20 +141,12 @@ export default function Footer() {
                 <Mail className="mt-0.5 size-4 text-accent" aria-hidden="true" />
                 <div>
                   <p className="font-extrabold text-white/85">Email</p>
-                  <div className="flex flex-col gap-1">
-                    <a
-                      className="text-white/70 font-bold hover:text-white"
-                      href="mailto:info@dcutawala.org"
-                    >
-                      info@dcutawala.org
-                    </a>
-                    <a
-                      className="text-white/70 font-bold hover:text-white"
-                      href="mailto:utawaladc@gmail.com"
-                    >
-                      dcutawala@gmail.com
-                    </a>
-                  </div>
+                  <a
+                    className="text-white/70 font-bold hover:text-white"
+                    href={`mailto:${site?.contact?.email || ""}`}
+                  >
+                    {site?.contact?.email || ""}
+                  </a>
                 </div>
               </div>
             </div>
@@ -156,7 +154,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/10 text-xs text-white/50 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Deliverance Church Utawala. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
           <p className="text-white/40">Built with Next.js</p>
         </div>
       </div>

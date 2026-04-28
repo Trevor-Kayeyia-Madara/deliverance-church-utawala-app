@@ -34,6 +34,7 @@ async function main() {
     shortName: "DC Utawala",
     tagline: "The Church of Choice",
     location: "Utawala, Nairobi, Kenya",
+    logoUrl: "/logo.png",
     addressLine1: "Utawala, Nairobi, Kenya",
     addressLine2: "Utawala Road",
     phoneDisplay: "+254 700 000 000",
@@ -42,7 +43,112 @@ async function main() {
     youtubeUrl: "https://www.youtube.com",
     facebookUrl: "https://www.facebook.com",
     instagramUrl: "https://www.instagram.com",
+    tiktokUrl: "https://www.tiktok.com/@utawaladeliverancechurch",
+    linktreeUrl: "https://linktr.ee/dcutawala",
     liveEmbedUrl: null,
+    serviceTimes: [
+      { day: "Sunday", time: "6:30 AM - 9:00 AM", label: "First Service" },
+      { day: "Sunday", time: "9:30 AM - 12:00 PM", label: "Second Service" },
+      { day: "Tuesday", time: "6:30 PM", label: "Fellowship" },
+      { day: "Wednesday", time: "6:30 PM - 8:00 PM", label: "Anchored Service" },
+      { day: "Friday", time: "6:30 PM - 8:00 PM", label: "Ignite Service" },
+    ],
+    school: {
+      name: "Dominion Center Kids School",
+      tagline:
+        "Providing quality Christian education where children learn, grow, and discover their God-given potential in a nurturing environment.",
+      heroTitle: "Dominion Center Kids School",
+      heroSubtitle:
+        "Providing quality Christian education where children learn, grow, and discover their God-given potential in a nurturing environment.",
+      programs: [
+        {
+          key: "play-group",
+          title: "Play Group",
+          subtitle: "From Age 2",
+          offers: [
+            "Play-based Learning",
+            "Christian Values",
+            "Qualified Teachers",
+            "Safe Environment",
+          ],
+        },
+        {
+          key: "pp1",
+          title: "PP1",
+          subtitle: "Intake Ongoing",
+          offers: [
+            "CBC Curriculum",
+            "Small Class Sizes",
+            "Extracurricular Activities",
+            "Moral Education",
+          ],
+        },
+      ],
+      cta: {
+        title: "Ready to Enroll Your Child?",
+        body:
+          "Join the Dominion Center family and give your child a foundation built on Christian values and academic excellence.",
+        primaryLabel: "Apply Now",
+        primaryHref: "/contact?subject=Dominion%20Center%20Admissions",
+        secondaryLabel: "Schedule Visit",
+        secondaryHref: "/contact?subject=Schedule%20a%20School%20Visit",
+      },
+    },
+    giving: {
+      title: "Giving & Donations",
+      headline: "Generous Hearts",
+      body:
+        "Your generosity enables us to fulfill our mission and serve our community. Thank you for being a faithful steward of God's blessings.",
+      types: [
+        {
+          key: "tithes",
+          title: "Tithes",
+          description:
+            "Your regular tithe offering to support the church ministry and operations.",
+          verse: '"Bring the whole tithe into the storehouse..." - Malachi 3:10',
+        },
+        {
+          key: "offering",
+          title: "Offering",
+          description:
+            "These go a long way to support various church programs and activities.",
+          verse:
+            '"Each of you should give what you have decided in your heart to give..." - 2 Corinthians 9:7',
+        },
+        {
+          key: "building",
+          title: "Building and Development",
+          description:
+            "Special donations to support our church building and infrastructure projects.",
+          verse:
+            '"Unless the Lord builds the house, the builders labor in vain." - Psalm 127:1',
+        },
+        {
+          key: "missions",
+          title: "Missions",
+          description:
+            "Support our local and international mission work and outreach programs.",
+          verse: '"Go and make disciples of all nations..." - Matthew 28:19',
+        },
+      ],
+      paymentMethods: [
+        {
+          key: "mpesa",
+          title: "M-Pesa",
+          lines: ["Paybill: 4043891", "Account: Your Name and Purpose"],
+        },
+        {
+          key: "bank",
+          title: "Bank Transfer",
+          lines: ["Bank: Equity Bank", "Paybill: 247247", "Account: 0240290276813"],
+        },
+        {
+          key: "development",
+          title: "For Development",
+          lines: ["Bank: Family Bank", "Paybill: 222111", "Account: 175579#Name"],
+        },
+      ],
+    },
   };
 
   const existingSettings = await prisma.siteSettings.findFirst();
